@@ -1,3 +1,0 @@
-{"verdicts": [
-  {"sourceIndex": 0, "verdict": "block", "criticalReason": "PR contains committed orchestrator records (`.eneik/records/qa-verification-088b3b8b-3097-417a-b1c3-53657c037673.json`), which violates the FILE CHANNEL INVARIANT: 'Never create, write, or commit factory record files or directories (such as '.eneik/', 'task-plan-*', 'qa-verification-*') in product PRs'.", "concerns": []}
-]}
