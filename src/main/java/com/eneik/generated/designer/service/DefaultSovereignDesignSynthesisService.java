@@ -106,6 +106,9 @@ public class DefaultSovereignDesignSynthesisService implements SovereignDesignSy
                 SynthesisStatus status = session.evaluateAuditAndTransition(report);
 
                 if (status == SynthesisStatus.COMPLETED_APPROVED || status == SynthesisStatus.COMPLETED_FALLBACK) {
+                    // Submit assets to the primary asset management system
+                    assetService.submitSynthesizedAssets(projectContextKey, currentDocument, assets);
+
                     // Telemetry Event 2: Record generation success
                     telemetryCollector.recordGenerationSuccess(
                             session.getId(),

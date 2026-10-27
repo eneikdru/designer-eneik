@@ -38,8 +38,13 @@ class DefaultSovereignDesignSynthesisServiceTest {
     private DesignTelemetryCollector telemetryCollector;
     private DefaultSovereignDesignSynthesisService synthesisService;
 
+    private boolean submitSynthesizedAssetsCalled = false;
+    private SynthesizedDomDocument submittedDocument = null;
+
     @BeforeEach
     void setUp() {
+        submitSynthesizedAssetsCalled = false;
+        submittedDocument = null;
         tokenCompiler = archetype -> new DesignTokenSet(
                 archetype,
                 Map.of("h1", "clamp(2rem, 5vw, 4rem)"),
@@ -59,7 +64,18 @@ class DefaultSovereignDesignSynthesisServiceTest {
                 return List.of(new LayoutGridPattern("SWISS_7_5", "grid-cols-12", "border-white/[0.07]", true));
             }
         };
-        assetService = contextKey -> Map.of("hero", "https://assets.eneik.com/hero.png");
+        assetService = new DesignAssetService() {
+            @Override
+            public Map<String, String> resolveProjectAssets(String projectContextKey) {
+                return Map.of("hero", "https://assets.eneik.com/hero.png");
+            }
+
+            @Override
+            public void submitSynthesizedAssets(String projectContextKey, SynthesizedDomDocument document, Map<String, String> assets) {
+                submitSynthesizedAssetsCalled = true;
+                submittedDocument = document;
+            }
+        };
         layoutSynthesizer = new SemanticLayoutSynthesizer() {
             @Override
             public SynthesizedDomDocument synthesizeLayout(DesignTokenSet tokenSet, LayoutGridPattern gridPattern, Map<String, String> projectAssetUrls, int roundIndex) {
@@ -122,6 +138,9 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0, summary.failureCount());
         assertEquals(1, summary.auditCount());
         assertEquals(1.0, summary.overallSuccessRate(), 0.0001);
+
+        assertTrue(submitSynthesizedAssetsCalled, "submitSynthesizedAssets should have been called upon approval");
+        assertNotNull(submittedDocument);
     }
 
     @Test
@@ -156,6 +175,9 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         assertEquals(TelemetryEventType.GENERATION_SUCCESS, events.get(2).eventType());
         assertEquals(1, events.get(2).iterationCount());
+
+        assertTrue(submitSynthesizedAssetsCalled, "submitSynthesizedAssets should have been called upon approval in refinement loop");
+        assertNotNull(submittedDocument);
     }
 
     @Test
