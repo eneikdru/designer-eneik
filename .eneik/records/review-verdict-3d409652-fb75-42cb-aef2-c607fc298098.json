@@ -1,0 +1,40 @@
+{
+  "verdicts": [
+    {
+      "sourceIndex": 0,
+      "verdict": "approve",
+      "criticalReason": "",
+      "concerns": []
+    },
+    {
+      "sourceIndex": 1,
+      "verdict": "approve",
+      "criticalReason": "",
+      "concerns": []
+    },
+    {
+      "sourceIndex": 2,
+      "verdict": "approve",
+      "criticalReason": "",
+      "concerns": []
+    },
+    {
+      "sourceIndex": 3,
+      "verdict": "block",
+      "criticalReason": "The PR diff includes deletions of existing product source code and test files under src/main/java/com/eneik/generated/model/ and src/test/java/com/eneik/generated/service/, and introduces new files under com.eneik.generated.designer.* which are entirely unrelated to the stated DevOps task of creating a docker-compose.yml and health check.",
+      "concerns": []
+    },
+    {
+      "sourceIndex": 4,
+      "verdict": "block",
+      "criticalReason": "The PR diff includes deletions of existing product source code and test files under src/main/java/com/eneik/generated/model/ and src/test/java/com/eneik/generated/service/, and introduces new files under com.eneik.generated.designer.* which are entirely unrelated to the stated DevOps task of adding a docker-compose.yml.",
+      "concerns": []
+    },
+    {
+      "sourceIndex": 5,
+      "verdict": "block",
+      "criticalReason": "The PR diff includes deletions of existing product source code and test files under src/main/java/com/eneik/generated/model/ and src/test/java/com/eneik/generated/service/ that appear entirely unrelated to verifying the telemetry pipeline logic.",
+      "concerns": []
+    }
+  ]
+}
