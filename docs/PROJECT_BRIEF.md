@@ -2,28 +2,25 @@
 
 ## Customer Job
 
-<!-- NOT-YET-STATED. Written from the client's own wishlist entries, in the client's
-     own words and language, by ProjectFlowService.syncClientBriefToRepository as soon
-     as the first client entry exists. Empty here on purpose.
+The client's own entries, quoted verbatim and in the client's own language. This file is
+maintained by the factory from the wishlist and must not be edited by hand or translated -
+it is the referent every later artifact is checked against.
 
-     Not a template for an agent to fill. A brief invented before the client spoke is
-     a decision taken in the wrong place: 8.2 derives |C|, the set of capabilities the
-     product claims, from the CLIENT's brief - so boilerplate here leaves nothing to
-     derive |C| from, and every later claim about the product ends up without a
-     bearer. Measured on test-forty-ninth: the client asked, in Russian, for a web
-     system for cataloguing epidemiological materials; this file said none of it. -->
+1. Построить автономную подсистему «Суверенный Дизайнер» (Autonomous Sovereign Designer Engine) для Фабрики EneikProductionSys без зависимости от платного Stitch.
+   
+   Цель: Автономная генерация UI/UX дизайн-макетов (mockup.html) уровня сайтов-миллионников (Stripe, Linear, Apple, Vercel, Mercury) для любых продуктов и архетипов (DevTools, FinTech, Editorial, Consumer).
+   
+   Ключевые компоненты к реализации:
+   1. DesignTokenCompiler: классификатор архетипа продукта, расчет адаптивной типографики clamp(...) и контрастности по APCA/WCAG AAA (минимум 7:1 к фону).
+   2. LayoutPatternRegistry: библиотека композиционных сеток сайтов-миллионников (швейцарская журнальная асимметрия 7/5 и 8/4, Bento Grid 2.0, многоуровневый обсидиан #08090C -> #11141C с 1px границами border-white/[0.07]).
+   3. SemanticLayoutSynthesizer: семантический HTML5/Tailwind DOM-генератор с поддержкой реальных медиа-ассетов проекта и доступностью по Tab (focus-visible).
+   4. PlaywrightVisionHarness: аппаратный рендеринг скриншотов на двух обязательных вьюпортах: 1440px десктоп и 375px мобайл.
+   5. VisionAuditLoop: зрительный аудит по деонтическим гейтам BARCAN-TAG-11 (нулевой шум Leica/GPS, отсутствие горизонтального скролла на 375px) с итеративным циклом исправления дефектов (до 3 раундов, целевой score >= 9.2).
+   6. Интеграция в конвейер Фабрики: создание сервиса SovereignDesignSynthesisService и подключение к DesignAssetService.java.
+   
+   Полная спецификация зафиксирована в docs/design/TZ_AUTONOMOUS_DESIGNER_ENGINE.md.
 
-## Production Constraints
+---
 
-- One project is isolated from every other project.
-- Seven Jules accounts attach to the active project context.
-- Roles are selected per task, not permanently assigned to accounts.
-- Tasks are created by the Technical Lead role only when a business need exists.
-- The client can stop production only by accepting the project.
-
-## Definition of Done
-
-- Repository workspace exists.
-- CI template exists.
-- Environment template exists.
-- Linear/GitHub provisioning status is visible in Eneik Production System.
+Entries: 1. Anything this product claims - a page
+heading, a filter, a capability - must trace to one of them or to a declared route.
