@@ -37,10 +37,22 @@ class DefaultSovereignDesignSynthesisServiceTest {
     private PlaywrightVisionHarness visionHarness;
     private VisionAuditLoop auditLoop;
     private DesignTelemetryCollector telemetryCollector;
+    private PrimaryAssetManagementSystem primaryAssetManagementSystem;
     private DefaultSovereignDesignSynthesisService synthesisService;
+
+    // To track calls to PrimaryAssetManagementSystem
+    private boolean assetsSubmitted;
+    private String submittedContextKey;
+    private SynthesizedDomDocument submittedDocument;
+    private List<ViewportCapture> submittedCaptures;
 
     @BeforeEach
     void setUp() {
+        assetsSubmitted = false;
+        submittedContextKey = null;
+        submittedDocument = null;
+        submittedCaptures = null;
+
         tokenCompiler = archetype -> new DesignTokenSet(
                 archetype,
                 Map.of("h1", "clamp(2rem, 5vw, 4rem)"),
@@ -79,6 +91,13 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         Clock fixedClock = Clock.fixed(Instant.parse("2026-10-27T12:00:00Z"), ZoneId.of("UTC"));
         telemetryCollector = new InMemoryDesignTelemetryCollector(fixedClock);
+
+        primaryAssetManagementSystem = (ctx, doc, caps) -> {
+            assetsSubmitted = true;
+            submittedContextKey = ctx;
+            submittedDocument = doc;
+            submittedCaptures = caps;
+        };
     }
 
     @Test
@@ -93,7 +112,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.DEV_TOOLS, "ctx-123");
@@ -123,6 +142,11 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0, summary.failureCount());
         assertEquals(1, summary.auditCount());
         assertEquals(1.0, summary.overallSuccessRate(), 0.0001);
+
+        assertTrue(assetsSubmitted, "Assets should have been submitted");
+        assertEquals("ctx-123", submittedContextKey);
+        assertNotNull(submittedDocument);
+        assertNotNull(submittedCaptures);
     }
 
     @Test
@@ -138,7 +162,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.FIN_TECH, "ctx-fin");
@@ -157,6 +181,52 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         assertEquals(TelemetryEventType.GENERATION_SUCCESS, events.get(2).eventType());
         assertEquals(1, events.get(2).iterationCount());
+
+        assertTrue(assetsSubmitted, "Assets should have been submitted after refinement");
+        assertEquals("ctx-fin", submittedContextKey);
+        assertNotNull(submittedDocument);
+    }
+
+    @Test
+    @DisplayName("Given a mockup requiring multiple audit iterations, generation completion metric correctly reports exact number of iterations performed")
+    void testMultiIterationAuditLoopIterationCountTelemetry() {
+        // Audit loop requires 3 rounds (round index 0, 1, 2) before approval on round 2
+        auditLoop = (document, captures) -> {
+            if (document.roundIndex() == 0) {
+                return new VisionAuditReport(8.0, new DeonticGateResult(true, true, true, true), List.of(), 0);
+            } else if (document.roundIndex() == 1) {
+                return new VisionAuditReport(8.9, new DeonticGateResult(true, true, true, true), List.of(), 1);
+            } else {
+                return new VisionAuditReport(9.5, new DeonticGateResult(true, true, true, true), List.of(), 2);
+            }
+        };
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.EDITORIAL, "ctx-multi");
+
+        assertEquals(SynthesisStatus.COMPLETED_APPROVED, session.getStatus());
+        assertEquals(2, session.getCurrentRound());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        // 3 audit completion events (round 0, 1, 2) + 1 generation success event
+        assertEquals(4, events.size());
+
+        // Verify iteration indices in recorded audit events
+        assertEquals(0, events.get(0).iterationCount());
+        assertEquals(1, events.get(1).iterationCount());
+        assertEquals(2, events.get(2).iterationCount());
+
+        // Verify generation success event metric reports exact iteration count (2)
+        TelemetryEvent successEvent = events.get(3);
+        assertEquals(TelemetryEventType.GENERATION_SUCCESS, successEvent.eventType());
+        assertEquals(2, successEvent.iterationCount());
+
+        DesignTelemetrySummary summary = telemetryCollector.getSummary();
+        assertEquals(2.0, summary.averageIterations(), 0.0001);
     }
 
     @Test
@@ -168,7 +238,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.CONSUMER, "ctx-err");
@@ -189,6 +259,8 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0, summary.successCount());
         assertEquals(1, summary.failureCount());
         assertEquals(0.0, summary.overallSuccessRate(), 0.0001);
+
+        assertFalse(assetsSubmitted, "Assets should not have been submitted on failure");
     }
 
     @Test

@@ -43,6 +43,7 @@ class EndToEndDesignSynthesisVerificationTest {
     private PlaywrightVisionHarness visionHarness;
     private VisionAuditLoop auditLoop;
     private DesignTelemetryCollector telemetryCollector;
+    private PrimaryAssetManagementSystem primaryAssetManagementSystem;
     private SovereignDesignSynthesisService synthesisService;
 
     @BeforeEach
@@ -85,6 +86,7 @@ class EndToEndDesignSynthesisVerificationTest {
 
         Clock fixedClock = Clock.fixed(Instant.parse("2026-10-27T10:00:00Z"), ZoneId.of("UTC"));
         telemetryCollector = new InMemoryDesignTelemetryCollector(fixedClock);
+        primaryAssetManagementSystem = (contextKey, document, captures) -> {};
     }
 
     @Test
@@ -114,7 +116,7 @@ class EndToEndDesignSynthesisVerificationTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.DEV_TOOLS, "seed-ctx-001");
@@ -155,7 +157,7 @@ class EndToEndDesignSynthesisVerificationTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.FIN_TECH, "seed-ctx-fin");

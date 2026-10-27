@@ -164,6 +164,51 @@ class DesignTelemetryCollectorTest {
     }
 
     @Test
+    @DisplayName("Given a suite of simulated generation requests, telemetry system accurately reflects success and failure rates")
+    void testSimulatedGenerationRequestsTelemetrySuccessAndFailureRates() {
+        // Simulate a suite of 10 requests: 7 successes, 3 failures
+        for (int i = 0; i < 7; i++) {
+            collector.recordGenerationSuccess(
+                    UUID.randomUUID(),
+                    i % 2 == 0 ? ProductArchetype.DEV_TOOLS : ProductArchetype.FIN_TECH,
+                    1,
+                    9.5,
+                    Map.of("requestIndex", String.valueOf(i))
+            );
+        }
+        for (int i = 0; i < 3; i++) {
+            collector.recordGenerationFailure(
+                    UUID.randomUUID(),
+                    ProductArchetype.CONSUMER,
+                    2,
+                    "Deontic gate failed: Leica noise detected",
+                    Map.of("requestIndex", String.valueOf(i))
+            );
+        }
+
+        DesignTelemetrySummary summary = collector.getSummary();
+
+        assertEquals(10, summary.totalRequests());
+        assertEquals(7, summary.successCount());
+        assertEquals(3, summary.failureCount());
+        assertEquals(0.70, summary.overallSuccessRate(), 0.0001);
+
+        Map<ProductArchetype, ArchetypeTelemetrySummary> summaries = summary.archetypeSummaries();
+        assertEquals(3, summaries.size());
+
+        ArchetypeTelemetrySummary consumerSummary = summaries.get(ProductArchetype.CONSUMER);
+        assertEquals(3, consumerSummary.totalRequests());
+        assertEquals(0, consumerSummary.successCount());
+        assertEquals(3, consumerSummary.failureCount());
+        assertEquals(0.0, consumerSummary.successRate(), 0.0001);
+
+        ArchetypeTelemetrySummary devToolsSummary = summaries.get(ProductArchetype.DEV_TOOLS);
+        assertEquals(4, devToolsSummary.totalRequests());
+        assertEquals(4, devToolsSummary.successCount());
+        assertEquals(1.0, devToolsSummary.successRate(), 0.0001);
+    }
+
+    @Test
     @DisplayName("Should handle empty telemetry state gracefully without divide by zero")
     void testEmptySummary() {
         DesignTelemetrySummary summary = collector.getSummary();
