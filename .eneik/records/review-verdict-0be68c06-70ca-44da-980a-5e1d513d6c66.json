@@ -1,0 +1,15 @@
+{
+  "verdicts": [
+    {
+      "sourceIndex": 0,
+      "verdict": "approve",
+      "criticalReason": "",
+      "concerns": [
+        {
+          "text": "The PR creates a new root .gitignore file. Creating or editing root .gitignore can lead to merge conflicts across parallel feature branches. Extending or creating a nested .gitignore is preferred.",
+          "severity": "low"
+        }
+      ]
+    }
+  ]
+}
