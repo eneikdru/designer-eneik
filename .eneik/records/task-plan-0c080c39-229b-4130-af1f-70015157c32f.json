@@ -1,0 +1,36 @@
+{
+  "epics": [
+    {
+      "existingEpicId": null,
+      "title": "Runtime Datastore Contract Consolidation",
+      "jtbd": "When reviewing the system's architecture, I want the runtime contract, build manifest, and docker-compose to agree on the datastore, so that the local and deployed environments are unambiguous and correctly provisioned.",
+      "kanoClass": "Must-Be",
+      "cynefinDomain": "clear",
+      "sixSigmaMetric": "Defect rate in environment provisioning and configuration consistency",
+      "tocConstraintRef": "Configuration divergence between architecture docs, build scripts, and local environment",
+      "sourceIndex": 0,
+      "requirements": [
+        "R1: The runtime contract (docs/architecture/adr-002-runtime-contract.md) must declare PostgreSQL as the datastore.",
+        "R2: The project build manifest must include the PostgreSQL driver dependency matching the engine provided in docker-compose.yml."
+      ],
+      "coverageComplete": true,
+      "slices": [
+        {
+          "title": "Declare PostgreSQL in runtime contract and build manifest",
+          "roleTag": "BARCAN-TAG-01",
+          "jtbd": "When implementing datastore configuration for this epic, I want to update the architecture contract and build manifest, so that the configuration divergence is eliminated.",
+          "acceptanceCriteria": "Given the docs/architecture/adr-002-runtime-contract.md file, When reviewed, Then it explicitly declares the datastore as PostgreSQL.\nGiven the project build manifest (pom.xml), When inspected, Then it contains the PostgreSQL driver dependency.\nGiven the project test suite, When run, Then unit and integration tests pass successfully with the updated dependency structure.",
+          "leanValue": "essential",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "Inconsistent datastore definitions",
+          "sixSigmaMetric": "Zero configuration divergence across architecture, build, and compose artifacts",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1",
+            "R2"
+          ]
+        }
+      ]
+    }
+  ]
+}
