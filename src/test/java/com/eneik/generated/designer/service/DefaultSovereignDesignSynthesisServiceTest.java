@@ -10,6 +10,7 @@ import com.eneik.generated.designer.domain.SynthesizedDomDocument;
 import com.eneik.generated.designer.domain.ViewportCapture;
 import com.eneik.generated.designer.domain.ViewportType;
 import com.eneik.generated.designer.domain.VisionAuditReport;
+import com.eneik.generated.designer.exception.RenderTimeoutException;
 import com.eneik.generated.designer.telemetry.DesignTelemetryCollector;
 import com.eneik.generated.designer.telemetry.DesignTelemetrySummary;
 import com.eneik.generated.designer.telemetry.InMemoryDesignTelemetryCollector;
@@ -188,5 +189,81 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0, summary.successCount());
         assertEquals(1, summary.failureCount());
         assertEquals(0.0, summary.overallSuccessRate(), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Should recover gracefully and transition to FAILED status when vision harness throws RenderTimeoutException")
+    void testExecuteDesignSynthesisRenderTimeoutRecovery() {
+        PlaywrightVisionHarness timingOutHarness = (document, viewports) -> {
+            throw new RenderTimeoutException("Rendering process timed out after 5000ms");
+        };
+
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                9.5, new DeonticGateResult(true, true, true, true), List.of(), 0
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                timingOutHarness, auditLoop, telemetryCollector
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.EDITORIAL, "ctx-timeout");
+
+        assertNotNull(session);
+        assertEquals(SynthesisStatus.FAILED, session.getStatus());
+        assertTrue(session.getFailureReason().contains("Rendering process timed out after 5000ms"));
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(1, events.size());
+
+        TelemetryEvent failEvent = events.get(0);
+        assertEquals(TelemetryEventType.GENERATION_FAILURE, failEvent.eventType());
+        assertEquals(ProductArchetype.EDITORIAL, failEvent.archetype());
+        assertTrue(failEvent.metadata().get("failureReason").contains("Rendering process timed out"));
+
+        DesignTelemetrySummary summary = telemetryCollector.getSummary();
+        assertEquals(1, summary.totalRequests());
+        assertEquals(0, summary.successCount());
+        assertEquals(1, summary.failureCount());
+    }
+
+    @Test
+    @DisplayName("Should transition to COMPLETED_FALLBACK when audit score persistently remains below 9.2 at maximum audit round limit 3")
+    void testExecuteDesignSynthesisMaxAuditIterationLimitFallback() {
+        // Persistently return non-approving score (< 9.2) across all rounds
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                8.7,
+                new DeonticGateResult(true, true, true, true),
+                List.of(new com.eneik.generated.designer.domain.CorrectionDirective("body", "margin: 0;", "Fix margins", document.roundIndex())),
+                document.roundIndex()
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.DEV_TOOLS, "ctx-max-rounds");
+
+        assertNotNull(session);
+        assertEquals(SynthesisStatus.COMPLETED_FALLBACK, session.getStatus());
+        assertEquals(3, session.getCurrentRound());
+
+        // Telemetry should record 4 audit events (rounds 0, 1, 2, 3) + 1 generation success event (fallback outcome)
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(5, events.size());
+
+        long auditCount = events.stream().filter(e -> e.eventType() == TelemetryEventType.AUDIT_COMPLETED).count();
+        assertEquals(4, auditCount);
+
+        TelemetryEvent finalEvent = events.get(events.size() - 1);
+        assertEquals(TelemetryEventType.GENERATION_SUCCESS, finalEvent.eventType());
+        assertEquals(3, finalEvent.iterationCount());
+        assertEquals(8.7, finalEvent.auditScore(), 0.0001);
+
+        DesignTelemetrySummary summary = telemetryCollector.getSummary();
+        assertEquals(1, summary.totalRequests());
+        assertEquals(1, summary.successCount());
+        assertEquals(0, summary.failureCount());
     }
 }
