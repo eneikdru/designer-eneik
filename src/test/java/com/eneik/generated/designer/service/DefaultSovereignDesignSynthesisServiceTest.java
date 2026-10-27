@@ -12,6 +12,7 @@ import com.eneik.generated.designer.domain.ViewportType;
 import com.eneik.generated.designer.domain.VisionAuditReport;
 import com.eneik.generated.designer.telemetry.DesignTelemetryCollector;
 import com.eneik.generated.designer.telemetry.DesignTelemetrySummary;
+import com.eneik.generated.designer.exception.RenderTimeoutException;
 import com.eneik.generated.designer.telemetry.InMemoryDesignTelemetryCollector;
 import com.eneik.generated.designer.telemetry.TelemetryEvent;
 import com.eneik.generated.designer.telemetry.TelemetryEventType;
@@ -202,7 +203,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.EDITORIAL, "ctx-multi");
@@ -260,5 +261,84 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0.0, summary.overallSuccessRate(), 0.0001);
 
         assertFalse(assetsSubmitted, "Assets should not have been submitted on failure");
+    }
+
+    @Test
+    @DisplayName("Should handle RenderTimeoutException during viewport capture and record failure telemetry")
+    void testRenderTimeoutExceptionHandling() {
+        visionHarness = (document, viewports) -> {
+            throw new RenderTimeoutException("Playwright timeout after 30000ms while capturing 1440px desktop viewport");
+        };
+
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                9.5,
+                new DeonticGateResult(true, true, true, true),
+                List.of(),
+                0
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.DEV_TOOLS, "ctx-timeout");
+
+        assertEquals(SynthesisStatus.FAILED, session.getStatus());
+        assertEquals("Playwright timeout after 30000ms while capturing 1440px desktop viewport", session.getFailureReason());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(1, events.size());
+
+        TelemetryEvent failEvent = events.get(0);
+        assertEquals(TelemetryEventType.GENERATION_FAILURE, failEvent.eventType());
+        assertEquals("Playwright timeout after 30000ms while capturing 1440px desktop viewport", failEvent.metadata().get("failureReason"));
+
+        assertFalse(assetsSubmitted, "Assets should not have been submitted when render times out");
+    }
+
+    @Test
+    @DisplayName("Should handle audit iteration limits exceeding max rounds and complete with fallback status")
+    void testAuditIterationLimitsReachedFallback() {
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                7.0,
+                new DeonticGateResult(false, true, true, true),
+                List.of(new com.eneik.generated.designer.domain.CorrectionDirective(".header", "color: white", "Low contrast", 0)),
+                document.roundIndex()
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.FIN_TECH, "ctx-max-rounds");
+
+        assertEquals(SynthesisStatus.COMPLETED_FALLBACK, session.getStatus());
+        assertEquals(3, session.getCurrentRound());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        // 4 audit completion events (rounds 0, 1, 2, 3) + 1 generation success event
+        assertEquals(5, events.size());
+
+        TelemetryEvent successEvent = events.get(4);
+        assertEquals(TelemetryEventType.GENERATION_SUCCESS, successEvent.eventType());
+        assertEquals(3, successEvent.iterationCount());
+
+        assertTrue(assetsSubmitted, "Assets should be submitted on fallback completion");
+    }
+
+    @Test
+    @DisplayName("Should throw NullPointerException when required archetype is null")
+    void testNullArchetypeHandling() {
+        VisionAuditLoop mockAuditLoop = (document, captures) -> new VisionAuditReport(
+                9.5, new DeonticGateResult(true, true, true, true), List.of(), 0
+        );
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, mockAuditLoop, telemetryCollector, primaryAssetManagementSystem
+        );
+
+        assertThrows(NullPointerException.class, () -> synthesisService.executeDesignSynthesis(null, "ctx-null"));
     }
 }
