@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: designer-eneik-app
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    environment:
+      - PROJECT_NAME=${PROJECT_NAME:-designer-eneik}
+      - PROJECT_SLUG=${PROJECT_SLUG:-designer-eneik}
+      - NODE_ENV=${NODE_ENV:-development}
+      - SERVER_PORT=${SERVER_PORT:-8080}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
