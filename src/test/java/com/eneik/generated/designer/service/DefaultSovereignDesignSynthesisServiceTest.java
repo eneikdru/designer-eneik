@@ -1,0 +1,192 @@
+package com.eneik.generated.designer.service;
+
+import com.eneik.generated.designer.domain.DeonticGateResult;
+import com.eneik.generated.designer.domain.DesignTokenSet;
+import com.eneik.generated.designer.domain.LayoutGridPattern;
+import com.eneik.generated.designer.domain.ProductArchetype;
+import com.eneik.generated.designer.domain.SynthesisSession;
+import com.eneik.generated.designer.domain.SynthesisStatus;
+import com.eneik.generated.designer.domain.SynthesizedDomDocument;
+import com.eneik.generated.designer.domain.ViewportCapture;
+import com.eneik.generated.designer.domain.ViewportType;
+import com.eneik.generated.designer.domain.VisionAuditReport;
+import com.eneik.generated.designer.telemetry.DesignTelemetryCollector;
+import com.eneik.generated.designer.telemetry.DesignTelemetrySummary;
+import com.eneik.generated.designer.telemetry.InMemoryDesignTelemetryCollector;
+import com.eneik.generated.designer.telemetry.TelemetryEvent;
+import com.eneik.generated.designer.telemetry.TelemetryEventType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class DefaultSovereignDesignSynthesisServiceTest {
+
+    private DesignTokenCompiler tokenCompiler;
+    private LayoutPatternRegistry patternRegistry;
+    private DesignAssetService assetService;
+    private SemanticLayoutSynthesizer layoutSynthesizer;
+    private PlaywrightVisionHarness visionHarness;
+    private VisionAuditLoop auditLoop;
+    private DesignTelemetryCollector telemetryCollector;
+    private DefaultSovereignDesignSynthesisService synthesisService;
+
+    @BeforeEach
+    void setUp() {
+        tokenCompiler = archetype -> new DesignTokenSet(
+                archetype,
+                Map.of("h1", "clamp(2rem, 5vw, 4rem)"),
+                "#08090C",
+                "#11141C",
+                "border-white/[0.07]",
+                7.5
+        );
+        patternRegistry = new LayoutPatternRegistry() {
+            @Override
+            public LayoutGridPattern resolveDefaultPattern(ProductArchetype archetype) {
+                return new LayoutGridPattern("SWISS_7_5", "grid-cols-12", "border-white/[0.07]", true);
+            }
+
+            @Override
+            public List<LayoutGridPattern> listAvailablePatterns() {
+                return List.of(new LayoutGridPattern("SWISS_7_5", "grid-cols-12", "border-white/[0.07]", true));
+            }
+        };
+        assetService = contextKey -> Map.of("hero", "https://assets.eneik.com/hero.png");
+        layoutSynthesizer = new SemanticLayoutSynthesizer() {
+            @Override
+            public SynthesizedDomDocument synthesizeLayout(DesignTokenSet tokenSet, LayoutGridPattern gridPattern, Map<String, String> projectAssetUrls, int roundIndex) {
+                return new SynthesizedDomDocument("<html><body>Initial</body></html>", roundIndex, "hash1");
+            }
+
+            @Override
+            public SynthesizedDomDocument refineLayout(SynthesizedDomDocument previousDocument, DesignTokenSet tokenSet, List<com.eneik.generated.designer.domain.CorrectionDirective> directives, int roundIndex) {
+                return new SynthesizedDomDocument("<html><body>Refined</body></html>", roundIndex, "hash2");
+            }
+        };
+        visionHarness = (document, viewports) -> List.of(
+                new ViewportCapture(ViewportType.DESKTOP_1440, "img1440", 1440),
+                new ViewportCapture(ViewportType.MOBILE_375, "img375", 375)
+        );
+
+        Clock fixedClock = Clock.fixed(Instant.parse("2026-10-27T12:00:00Z"), ZoneId.of("UTC"));
+        telemetryCollector = new InMemoryDesignTelemetryCollector(fixedClock);
+    }
+
+    @Test
+    @DisplayName("Should execute synthesis pipeline to approval and record success and audit telemetry events")
+    void testExecuteDesignSynthesisApproval() {
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                9.5,
+                new DeonticGateResult(true, true, true, true),
+                List.of(),
+                0
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.DEV_TOOLS, "ctx-123");
+
+        assertNotNull(session);
+        assertEquals(SynthesisStatus.COMPLETED_APPROVED, session.getStatus());
+        assertEquals(0, session.getCurrentRound());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(2, events.size());
+
+        TelemetryEvent auditEvent = events.get(0);
+        assertEquals(TelemetryEventType.AUDIT_COMPLETED, auditEvent.eventType());
+        assertEquals(ProductArchetype.DEV_TOOLS, auditEvent.archetype());
+        assertEquals(9.5, auditEvent.auditScore(), 0.0001);
+        assertTrue(auditEvent.deonticGatePassed());
+
+        TelemetryEvent successEvent = events.get(1);
+        assertEquals(TelemetryEventType.GENERATION_SUCCESS, successEvent.eventType());
+        assertEquals(ProductArchetype.DEV_TOOLS, successEvent.archetype());
+        assertEquals(0, successEvent.iterationCount());
+        assertEquals(9.5, successEvent.auditScore(), 0.0001);
+
+        DesignTelemetrySummary summary = telemetryCollector.getSummary();
+        assertEquals(1, summary.totalRequests());
+        assertEquals(1, summary.successCount());
+        assertEquals(0, summary.failureCount());
+        assertEquals(1, summary.auditCount());
+        assertEquals(1.0, summary.overallSuccessRate(), 0.0001);
+    }
+
+    @Test
+    @DisplayName("Should execute synthesis iterative refinement loop up to approval and record multiple audit telemetry events")
+    void testExecuteDesignSynthesisRefinementLoop() {
+        auditLoop = (document, captures) -> {
+            if (document.roundIndex() == 0) {
+                return new VisionAuditReport(8.0, new DeonticGateResult(true, true, true, true), List.of(), 0);
+            } else {
+                return new VisionAuditReport(9.3, new DeonticGateResult(true, true, true, true), List.of(), 1);
+            }
+        };
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.FIN_TECH, "ctx-fin");
+
+        assertEquals(SynthesisStatus.COMPLETED_APPROVED, session.getStatus());
+        assertEquals(1, session.getCurrentRound());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(3, events.size()); // Audit round 0, Audit round 1, Success
+
+        assertEquals(TelemetryEventType.AUDIT_COMPLETED, events.get(0).eventType());
+        assertEquals(0, events.get(0).iterationCount());
+
+        assertEquals(TelemetryEventType.AUDIT_COMPLETED, events.get(1).eventType());
+        assertEquals(1, events.get(1).iterationCount());
+
+        assertEquals(TelemetryEventType.GENERATION_SUCCESS, events.get(2).eventType());
+        assertEquals(1, events.get(2).iterationCount());
+    }
+
+    @Test
+    @DisplayName("Should record generation failure telemetry event when pipeline encounters unhandled exception")
+    void testExecuteDesignSynthesisExceptionFailure() {
+        auditLoop = (document, captures) -> {
+            throw new RuntimeException("Playwright vision harness connection timeout");
+        };
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.CONSUMER, "ctx-err");
+
+        assertEquals(SynthesisStatus.FAILED, session.getStatus());
+        assertEquals("Playwright vision harness connection timeout", session.getFailureReason());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(1, events.size());
+
+        TelemetryEvent failEvent = events.get(0);
+        assertEquals(TelemetryEventType.GENERATION_FAILURE, failEvent.eventType());
+        assertEquals(ProductArchetype.CONSUMER, failEvent.archetype());
+        assertEquals("Playwright vision harness connection timeout", failEvent.metadata().get("failureReason"));
+
+        DesignTelemetrySummary summary = telemetryCollector.getSummary();
+        assertEquals(1, summary.totalRequests());
+        assertEquals(0, summary.successCount());
+        assertEquals(1, summary.failureCount());
+        assertEquals(0.0, summary.overallSuccessRate(), 0.0001);
+    }
+}
