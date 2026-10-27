@@ -29,10 +29,11 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
-        <!-- No persistence here, deliberately. JPA, a migration tool and a driver are
-             consequences of the datastore the runtime contract declares (ACP-104); until
-             ARCHITECTURE declares one there is no datastore to depend on, and writing a
-             default would BE the decision. -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
