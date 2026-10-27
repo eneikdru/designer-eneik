@@ -202,7 +202,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.EDITORIAL, "ctx-multi");
@@ -260,5 +260,67 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0.0, summary.overallSuccessRate(), 0.0001);
 
         assertFalse(assetsSubmitted, "Assets should not have been submitted on failure");
+    }
+
+    @Test
+    @DisplayName("Should handle rendering timeout exception gracefully and transition session to FAILED without submitting assets")
+    void testExecuteDesignSynthesisRenderTimeoutRecovery() {
+        PlaywrightVisionHarness timingOutHarness = (doc, viewports) -> {
+            throw new com.eneik.generated.designer.exception.RenderTimeoutException("Rendering timed out after 3000ms");
+        };
+
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                9.5, new DeonticGateResult(true, true, true, true), List.of(), 0
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                timingOutHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.CONSUMER, "ctx-timeout");
+
+        assertEquals(SynthesisStatus.FAILED, session.getStatus());
+        assertEquals("Rendering timed out after 3000ms", session.getFailureReason());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        assertEquals(1, events.size());
+        assertEquals(TelemetryEventType.GENERATION_FAILURE, events.get(0).eventType());
+
+        assertFalse(assetsSubmitted, "Assets should not have been submitted when render timeout occurs");
+    }
+
+    @Test
+    @DisplayName("Should transition session to COMPLETED_FALLBACK and submit assets when audit iteration limit (3 rounds) is reached without passing score")
+    void testExecuteDesignSynthesisAuditIterationLimitFallback() {
+        // Failing audit report continuously
+        auditLoop = (document, captures) -> new VisionAuditReport(
+                7.5,
+                new DeonticGateResult(true, false, true, true), // horizontal scroll failed
+                List.of(new com.eneik.generated.designer.domain.CorrectionDirective(".container", "overflow-x: hidden", "Fix scroll overflow", document.roundIndex())),
+                document.roundIndex()
+        );
+
+        synthesisService = new DefaultSovereignDesignSynthesisService(
+                tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
+        );
+
+        SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.FIN_TECH, "ctx-limit");
+
+        assertEquals(SynthesisStatus.COMPLETED_FALLBACK, session.getStatus());
+        assertEquals(3, session.getCurrentRound());
+
+        List<TelemetryEvent> events = telemetryCollector.getRecordedEvents();
+        // 4 audit completion events (rounds 0, 1, 2, 3) + 1 generation success event (fallback)
+        assertEquals(5, events.size());
+
+        TelemetryEvent successEvent = events.get(4);
+        assertEquals(TelemetryEventType.GENERATION_SUCCESS, successEvent.eventType());
+        assertEquals(3, successEvent.iterationCount());
+
+        assertTrue(assetsSubmitted, "Fallback assets should be submitted to asset service");
+        assertEquals("ctx-limit", submittedContextKey);
+        assertNotNull(submittedDocument);
     }
 }
