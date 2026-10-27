@@ -36,10 +36,22 @@ class DefaultSovereignDesignSynthesisServiceTest {
     private PlaywrightVisionHarness visionHarness;
     private VisionAuditLoop auditLoop;
     private DesignTelemetryCollector telemetryCollector;
+    private PrimaryAssetManagementSystem primaryAssetManagementSystem;
     private DefaultSovereignDesignSynthesisService synthesisService;
+
+    // To track calls to PrimaryAssetManagementSystem
+    private boolean assetsSubmitted;
+    private String submittedContextKey;
+    private SynthesizedDomDocument submittedDocument;
+    private List<ViewportCapture> submittedCaptures;
 
     @BeforeEach
     void setUp() {
+        assetsSubmitted = false;
+        submittedContextKey = null;
+        submittedDocument = null;
+        submittedCaptures = null;
+
         tokenCompiler = archetype -> new DesignTokenSet(
                 archetype,
                 Map.of("h1", "clamp(2rem, 5vw, 4rem)"),
@@ -78,6 +90,13 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         Clock fixedClock = Clock.fixed(Instant.parse("2026-10-27T12:00:00Z"), ZoneId.of("UTC"));
         telemetryCollector = new InMemoryDesignTelemetryCollector(fixedClock);
+
+        primaryAssetManagementSystem = (ctx, doc, caps) -> {
+            assetsSubmitted = true;
+            submittedContextKey = ctx;
+            submittedDocument = doc;
+            submittedCaptures = caps;
+        };
     }
 
     @Test
@@ -92,7 +111,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.DEV_TOOLS, "ctx-123");
@@ -122,6 +141,11 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0, summary.failureCount());
         assertEquals(1, summary.auditCount());
         assertEquals(1.0, summary.overallSuccessRate(), 0.0001);
+
+        assertTrue(assetsSubmitted, "Assets should have been submitted");
+        assertEquals("ctx-123", submittedContextKey);
+        assertNotNull(submittedDocument);
+        assertNotNull(submittedCaptures);
     }
 
     @Test
@@ -137,7 +161,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.FIN_TECH, "ctx-fin");
@@ -156,6 +180,10 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         assertEquals(TelemetryEventType.GENERATION_SUCCESS, events.get(2).eventType());
         assertEquals(1, events.get(2).iterationCount());
+
+        assertTrue(assetsSubmitted, "Assets should have been submitted after refinement");
+        assertEquals("ctx-fin", submittedContextKey);
+        assertNotNull(submittedDocument);
     }
 
     @Test
@@ -167,7 +195,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
 
         synthesisService = new DefaultSovereignDesignSynthesisService(
                 tokenCompiler, patternRegistry, assetService, layoutSynthesizer,
-                visionHarness, auditLoop, telemetryCollector
+                visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem
         );
 
         SynthesisSession session = synthesisService.executeDesignSynthesis(ProductArchetype.CONSUMER, "ctx-err");
@@ -188,5 +216,7 @@ class DefaultSovereignDesignSynthesisServiceTest {
         assertEquals(0, summary.successCount());
         assertEquals(1, summary.failureCount());
         assertEquals(0.0, summary.overallSuccessRate(), 0.0001);
+
+        assertFalse(assetsSubmitted, "Assets should not have been submitted on failure");
     }
 }

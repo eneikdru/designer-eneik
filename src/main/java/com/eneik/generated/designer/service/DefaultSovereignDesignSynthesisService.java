@@ -29,6 +29,7 @@ public class DefaultSovereignDesignSynthesisService implements SovereignDesignSy
     private final PlaywrightVisionHarness visionHarness;
     private final VisionAuditLoop auditLoop;
     private final DesignTelemetryCollector telemetryCollector;
+    private final PrimaryAssetManagementSystem primaryAssetManagementSystem;
     private final Clock clock;
 
     public DefaultSovereignDesignSynthesisService(
@@ -38,9 +39,10 @@ public class DefaultSovereignDesignSynthesisService implements SovereignDesignSy
             SemanticLayoutSynthesizer layoutSynthesizer,
             PlaywrightVisionHarness visionHarness,
             VisionAuditLoop auditLoop,
-            DesignTelemetryCollector telemetryCollector
+            DesignTelemetryCollector telemetryCollector,
+            PrimaryAssetManagementSystem primaryAssetManagementSystem
     ) {
-        this(tokenCompiler, patternRegistry, assetService, layoutSynthesizer, visionHarness, auditLoop, telemetryCollector, Clock.systemUTC());
+        this(tokenCompiler, patternRegistry, assetService, layoutSynthesizer, visionHarness, auditLoop, telemetryCollector, primaryAssetManagementSystem, Clock.systemUTC());
     }
 
     public DefaultSovereignDesignSynthesisService(
@@ -51,6 +53,7 @@ public class DefaultSovereignDesignSynthesisService implements SovereignDesignSy
             PlaywrightVisionHarness visionHarness,
             VisionAuditLoop auditLoop,
             DesignTelemetryCollector telemetryCollector,
+            PrimaryAssetManagementSystem primaryAssetManagementSystem,
             Clock clock
     ) {
         this.tokenCompiler = Objects.requireNonNull(tokenCompiler, "tokenCompiler cannot be null");
@@ -60,6 +63,7 @@ public class DefaultSovereignDesignSynthesisService implements SovereignDesignSy
         this.visionHarness = Objects.requireNonNull(visionHarness, "visionHarness cannot be null");
         this.auditLoop = Objects.requireNonNull(auditLoop, "auditLoop cannot be null");
         this.telemetryCollector = Objects.requireNonNull(telemetryCollector, "telemetryCollector cannot be null");
+        this.primaryAssetManagementSystem = Objects.requireNonNull(primaryAssetManagementSystem, "primaryAssetManagementSystem cannot be null");
         this.clock = Objects.requireNonNull(clock, "clock cannot be null");
     }
 
@@ -114,6 +118,7 @@ public class DefaultSovereignDesignSynthesisService implements SovereignDesignSy
                             report.overallScore(),
                             meta
                     );
+                    primaryAssetManagementSystem.submitAssets(projectContextKey, currentDocument, captures);
                     break;
                 } else if (status == SynthesisStatus.REFINING) {
                     session.transitionToSynthesizing();
