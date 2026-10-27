@@ -1,0 +1,196 @@
+{
+  "epics": [
+    {
+      "existingEpicId": null,
+      "title": "Autonomous Sovereign Designer Engine",
+      "jtbd": "When the client requests a new product design, I want the system to autonomously synthesize, render, and visually audit a complete UI/UX mockup, so that high-end design assets are produced without relying on external paid design services.",
+      "kanoClass": "Performance",
+      "cynefinDomain": "complex",
+      "sixSigmaMetric": "Mockup visual audit pass rate on first iteration",
+      "tocConstraintRef": "Visual audit processing time and iteration limit",
+      "sourceIndex": 0,
+      "requirements": [
+        "R1: The system must classify the product archetype and calculate responsive typography and WCAG AAA compliant contrast tokens, falling back to a default archetype if classification fails.",
+        "R2: The system must maintain a registry of high-end layout patterns (e.g., asymmetric grids, multi-layer overlays).",
+        "R3: The system must synthesize a semantic HTML5 and Tailwind CSS DOM using the calculated tokens and selected layout patterns, incorporating real project media assets.",
+        "R4: The system must render screenshots of the synthesized DOM at both 1440px desktop and 375px mobile viewports, handling rendering timeouts gracefully.",
+        "R5: The system must perform an automated visual audit of the rendered screenshots against defined design gates (e.g., no mobile horizontal scroll, noise limits) and iteratively correct the DOM up to 3 times.",
+        "R6: The system must expose a service interface to trigger the design synthesis process and integrate the finalized mockup assets with the primary asset management system.",
+        "R7: The system must provide a defined failure path and status notification if a mockup fails to reach a visual audit score of 9.2 or higher after the maximum of 3 iteration rounds.",
+        "R8: The generated HTML5 mockups must meet WCAG 2.1 AA standards, including keyboard operability, visible focus, labelled form controls, and at least 4.5:1 text contrast.",
+        "R9: The system must provide initial seed data (default archetype definitions, sample media assets, and base layout patterns) sufficient to successfully generate and audit a complete mockup on a fresh deployment."
+      ],
+      "coverageComplete": true,
+      "slices": [
+        {
+          "title": "Architecture and Synthesis Pipeline Decision",
+          "roleTag": "BARCAN-TAG-01",
+          "jtbd": "When designing the architecture for this epic, I want to define the interaction boundaries between the token compiler, DOM synthesizer, and headless render harness, so that the iterative visual audit loop operates reliably without circular dependencies.",
+          "acceptanceCriteria": "Given the complex requirements of the design engine, When the architecture is proposed, Then it specifies clear data contracts between the synthesis and rendering phases.\nGiven the need for iterative visual audits, When the correction loop is designed, Then the decision record outlines a deterministic method for applying DOM corrections without infinite loops.",
+          "leanValue": "essential",
+          "cynefinDomain": "complicated",
+          "tocConstraintRef": "Architectural ambiguity",
+          "sixSigmaMetric": "Design flaw defect rate",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R9"
+          ]
+        },
+        {
+          "title": "Token and Pattern Schema Definition",
+          "roleTag": "BARCAN-TAG-08",
+          "jtbd": "When implementing the core data models for this epic, I want to define the schemas for product archetypes, design tokens, and layout patterns, so that the synthesizer has structured inputs to generate the DOM.",
+          "acceptanceCriteria": "Given a request with an unknown product archetype, When the tokens are calculated, Then the system falls back to a safe default archetype.\nGiven a valid product archetype, When the design tokens are queried, Then the system returns typography constraints and contrast rules meeting WCAG AAA (7:1) minimums.\nGiven a fresh deployment, When the system initializes, Then default layout patterns and seed media assets are loaded into the registry.",
+          "leanValue": "essential",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "Schema load time",
+          "sixSigmaMetric": "Data validation failure rate",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1",
+            "R2",
+            "R9"
+          ]
+        },
+        {
+          "title": "HTML5 DOM Synthesizer",
+          "roleTag": "BARCAN-TAG-02",
+          "jtbd": "When implementing the generator for this epic, I want to construct semantic HTML5 and Tailwind CSS documents from the token and pattern data, so that a compliant and accessible mockup is produced.",
+          "acceptanceCriteria": "Given a set of calculated design tokens and layout patterns, When the synthesizer is invoked, Then it generates a valid HTML5 document styled with Tailwind CSS classes.\nGiven the generated DOM structure, When evaluated for accessibility, Then it exhibits keyboard operability, visible focus indicators, and labelled form controls conforming to WCAG 2.1 AA.",
+          "leanValue": "valuable",
+          "cynefinDomain": "complicated",
+          "tocConstraintRef": "DOM generation latency",
+          "sixSigmaMetric": "DOM structural error rate",
+          "hasUi": false,
+          "requirementRefs": [
+            "R3",
+            "R8"
+          ]
+        },
+        {
+          "title": "Headless Render Harness",
+          "roleTag": "BARCAN-TAG-02",
+          "jtbd": "When implementing the rendering pipeline for this epic, I want to capture accurate screenshots at 1440px and 375px viewports with timeout handling, so that the visual audit loop can evaluate the exact layout.",
+          "acceptanceCriteria": "Given a generated HTML5 document, When the rendering harness processes it, Then screenshots are captured at exactly 1440px and 375px widths.\nGiven a document that causes the renderer to hang, When the defined timeout is reached, Then the rendering process aborts gracefully and logs a timeout error.",
+          "leanValue": "essential",
+          "cynefinDomain": "complicated",
+          "tocConstraintRef": "Renderer resource utilization",
+          "sixSigmaMetric": "Rendering timeout frequency",
+          "hasUi": false,
+          "requirementRefs": [
+            "R4"
+          ]
+        },
+        {
+          "title": "Visual Audit and Iteration Loop",
+          "roleTag": "BARCAN-TAG-04",
+          "jtbd": "When implementing the evaluation engine for this epic, I want to analyze the screenshots against design gates and loop corrections back to the synthesizer, so that the final mockup either meets the target score or triggers the failure path.",
+          "acceptanceCriteria": "Given rendered screenshots for a mockup, When the visual audit runs, Then it evaluates deontic gates such as zero noise and no horizontal scroll on mobile.\nGiven a mockup that scores below 9.2, When the audit completes, Then it identifies defects and triggers a correction iteration up to a maximum of 3 rounds.\nGiven a mockup that still scores below 9.2 after 3 iterations, When the final audit concludes, Then a defined failure path is executed to notify the requester.",
+          "leanValue": "valuable",
+          "cynefinDomain": "complex",
+          "tocConstraintRef": "Vision model inference time",
+          "sixSigmaMetric": "Audit false positive rate",
+          "hasUi": false,
+          "requirementRefs": [
+            "R5",
+            "R7"
+          ]
+        },
+        {
+          "title": "Design Synthesis Integration Service",
+          "roleTag": "BARCAN-TAG-02",
+          "jtbd": "When implementing the service interface for this epic, I want to orchestrate the generation pipeline and deliver the final assets or failure notifications, so that the broader platform can consume the autonomous designs.",
+          "acceptanceCriteria": "Given a valid design generation request via the service interface, When the request is accepted, Then the integration service orchestrates the synthesis, rendering, and audit pipeline.\nGiven a successfully audited mockup, When the pipeline completes, Then the resulting HTML and media assets are submitted to the primary asset management system.",
+          "leanValue": "valuable",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "API concurrent request limit",
+          "sixSigmaMetric": "API endpoint response time",
+          "hasUi": false,
+          "requirementRefs": [
+            "R6"
+          ]
+        },
+        {
+          "title": "End-to-End Design Synthesis Verification",
+          "roleTag": "BARCAN-TAG-06",
+          "jtbd": "When implementing the testing strategy for this epic, I want to verify the complete synthesis pipeline from archetype input to visual audit completion using initial seed data, so that the engine reliably produces high-quality mockups.",
+          "acceptanceCriteria": "Given a complete synthesis request with initial seed data, When the end-to-end pipeline is executed, Then the system successfully synthesizes, renders, and audits a mockup that integrates with the asset service.\nGiven the full pipeline execution, When checking test coverage, Then unit, integration, and end-to-end tests validate all failure recoveries, including rendering timeouts and audit iteration limits.",
+          "leanValue": "essential",
+          "cynefinDomain": "complicated",
+          "tocConstraintRef": "Test suite execution time",
+          "sixSigmaMetric": "End-to-end test flakiness rate",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R9"
+          ]
+        }
+      ]
+    },
+    {
+      "existingEpicId": null,
+      "title": "Telemetry and Success Measurement for Designer Engine",
+      "jtbd": "When operating the designer engine, I want to measure the generation success rate and visual audit scores, so that I know whether the system successfully replaces external paid design services.",
+      "kanoClass": "Must-Be",
+      "cynefinDomain": "clear",
+      "sixSigmaMetric": "Telemetry data completeness and accuracy",
+      "tocConstraintRef": "Metrics ingestion latency",
+      "sourceIndex": 0,
+      "requirements": [
+        "R1: The system must track the goal of autonomous, high-quality mockup generation without external dependencies.",
+        "R2: The system must collect metrics on the mockup generation success rate and failure rate to answer whether the engine operates reliably.",
+        "R3: The system must track the average visual audit score and the number of iterative correction rounds required per mockup to answer whether the target quality is efficiently met."
+      ],
+      "coverageComplete": true,
+      "slices": [
+        {
+          "title": "Telemetry Metrics Collection",
+          "roleTag": "BARCAN-TAG-02",
+          "jtbd": "When implementing the metrics collection for this epic, I want to instrument the design engine to record generation success, failure, audit scores, and iteration counts, so that the defined Goal-Question-Metric framework is satisfied.",
+          "acceptanceCriteria": "Given the designer engine processes a request, When the request succeeds or fails, Then the success or failure event is recorded with relevant metadata.\nGiven a visual audit completes, When the final score is determined, Then the score and iteration count are logged for aggregation.",
+          "leanValue": "valuable",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "Telemetry data volume",
+          "sixSigmaMetric": "Metric recording reliability",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1",
+            "R2",
+            "R3"
+          ]
+        },
+        {
+          "title": "Telemetry Pipeline Verification",
+          "roleTag": "BARCAN-TAG-06",
+          "jtbd": "When implementing the testing strategy for this epic, I want to verify that the generation outcomes and visual audit scores are accurately captured and reported, so that the business can trust the success measurements.",
+          "acceptanceCriteria": "Given a suite of simulated generation requests, When the requests are processed by the engine, Then the telemetry system accurately reflects the expected success and failure rates.\nGiven a mockup that requires multiple audit iterations, When the generation completes, Then the metric correctly reports the exact number of iterations performed.",
+          "leanValue": "essential",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "Test suite execution time",
+          "sixSigmaMetric": "Test coverage of telemetry events",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1",
+            "R2",
+            "R3"
+          ]
+        }
+      ]
+    }
+  ]
+}
