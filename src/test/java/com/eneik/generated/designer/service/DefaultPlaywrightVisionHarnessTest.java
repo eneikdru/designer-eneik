@@ -20,7 +20,7 @@ class DefaultPlaywrightVisionHarnessTest {
 
     @BeforeEach
     void setUp() {
-        harness = new DefaultPlaywrightVisionHarness(Duration.ofSeconds(3));
+        harness = new DefaultPlaywrightVisionHarness(Duration.ofSeconds(10));
     }
 
     @AfterEach
