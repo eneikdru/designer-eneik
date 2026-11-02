@@ -20,7 +20,9 @@ it is the referent every later artifact is checked against.
    
    Полная спецификация зафиксирована в docs/design/TZ_AUTONOMOUS_DESIGNER_ENGINE.md.
 
+2. Eliminate mock components in designer-eneik: implement real semantic layout synthesis with Obsidian design tokens (#08090C, #11141C, emerald-500 accents), real Playwright vision harness rendering at 1440x900 and 375x812 with actual DOM geometry, and BARCAN-TAG-11 deontic gate enforcing zero optical noise, anti-slop color palette, and WCAG AAA contrast.
+
 ---
 
-Entries: 1. Anything this product claims - a page
+Entries: 2. Anything this product claims - a page
 heading, a filter, a capability - must trace to one of them or to a declared route.
