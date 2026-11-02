@@ -1,0 +1,15 @@
+{
+  "verdicts": [
+    {
+      "sourceIndex": 0,
+      "verdict": "approve",
+      "criticalReason": "",
+      "concerns": [
+        {
+          "text": "Default placeholder secret keys in application.properties should be overridden in production configurations",
+          "severity": "low"
+        }
+      ]
+    }
+  ]
+}
