@@ -6,76 +6,102 @@
       "jtbd": "When the client requests a new product design, I want the system to autonomously synthesize, render, and visually audit a complete UI/UX mockup, so that high-end design assets are produced without relying on external paid design services.",
       "kanoClass": "Performance",
       "cynefinDomain": "complicated",
-      "sixSigmaMetric": "Mockup synthesis defect rate < 1.0 DPMO and visual audit pass accuracy > 99%",
-      "tocConstraintRef": "TOC-SYNTHESIS-RENDER-PIPELINE",
+      "sixSigmaMetric": "Mock component elimination rate = 100% and visual audit pass rate >= 99.5%",
+      "tocConstraintRef": "CCR: Playwright vision rendering throughput and layout synthesis latency",
       "sourceIndex": 0,
       "requirements": [
-        "R1: Eliminate mock components and implement real semantic layout synthesis using Obsidian design tokens (#08090C background, #11141C surface, emerald-500 accents) in designer-eneik.",
-        "R2: Implement Playwright vision harness rendering views at 1440x900 desktop and 375x812 mobile viewports with actual DOM geometry inspection.",
-        "R3: Implement BARCAN-TAG-11 deontic gate enforcing zero optical noise, anti-slop color palette verification, and WCAG AAA contrast standards.",
-        "R4: Comprehensive test suite spanning unit, integration, and E2E verification of synthesis, rendering, and deontic visual audits."
+        "R1: Define data models and schemas for semantic layout definitions, Obsidian design tokens (#08090C, #11141C, emerald-500), viewport geometry, and audit reports",
+        "R2: Define shared API contract for layout synthesis requests, dual-viewport rendering parameters (1440x900 and 375x812), and deontic gate evaluation DTOs",
+        "R3: Implement real semantic layout synthesis engine replacing mock components with strict Obsidian design token integration",
+        "R4: Implement Playwright vision harness capturing real DOM geometry at desktop 1440x900 and mobile 375x812 viewports",
+        "R5: Implement deontic gate visual audit engine and UI enforcing zero optical noise, anti-slop color palette conformance, and WCAG AAA contrast",
+        "R6: Implement test pyramid suite spanning unit testing of layout synthesis, integration testing of Playwright rendering, and E2E validation of the visual audit gate"
       ],
       "coverageComplete": true,
       "slices": [
         {
-          "title": "Define Shared Contract for Layout Synthesis and Vision Audit",
-          "roleTag": "BARCAN-TAG-12",
-          "jtbd": "When implementing layout synthesis and vision auditing for this epic, I want to define typed interfaces and DTOs for Obsidian token parameters, viewport rendering dimensions, and audit gate results, so that backend synthesis and frontend gate components integrate without schema divergence.",
-          "acceptanceCriteria": "Given layout synthesis specification schemas, When generating TypeScript DTO contracts, Then all Obsidian tokens (#08090C, #11141C, emerald-500) and viewport dimensions (1440x900, 375x812) are strictly typed.\nGiven audit evaluation results, When serializing deontic gate outputs, Then contrast ratios, optical noise scores, and pass/fail statuses conform to the schema.\nGiven invalid synthesis payload attributes, When validated against the DTO validator, Then actionable schema validation errors are returned immediately.",
+          "title": "Layout Schema and Obsidian Token Data Models",
+          "roleTag": "BARCAN-TAG-08",
+          "jtbd": "When implementing the data persistence layer for this epic, I want structured models for Obsidian design tokens, viewport configurations, and visual audit results, so that the designer engine operates on validated, strongly-typed layout entities.",
+          "acceptanceCriteria": "Given a layout specification with Obsidian design tokens (#08090C, #11141C, emerald-500),\nWhen the schema validator evaluates the token structure,\nThen it validates color hex values, surface hierarchies, and spatial constraints without data loss.\nGiven an audit report payload with DOM geometry nodes,\nWhen persisted to storage,\nThen the audit entities are queryable with complete bounding box and contrast ratio attributes.",
           "leanValue": "essential",
           "cynefinDomain": "clear",
-          "tocConstraintRef": "TOC-CONTRACT-SCHEMA-DEFINITION",
-          "sixSigmaMetric": "100% contract type safety with 0 untyped any declarations in shared DTOs",
+          "tocConstraintRef": "Schema serialization overhead and token validation latency",
+          "sixSigmaMetric": "Schema validation error rate < 0.01% on token definitions",
           "hasUi": false,
-          "requirementRefs": ["R1", "R2", "R3"]
+          "requirementRefs": [
+            "R1"
+          ]
         },
         {
-          "title": "Implement Real Semantic Layout Synthesis with Obsidian Tokens",
-          "roleTag": "BARCAN-TAG-02",
-          "jtbd": "When implementing semantic layout synthesis for this epic, I want to eliminate mock layouts and synthesize structured DOM trees using Obsidian design tokens, so that production-grade layout definitions are generated autonomously.",
-          "acceptanceCriteria": "Given a synthesis request for a product view, When the layout synthesis engine processes the prompt, Then concrete DOM tree structures are produced without stub or mock components.\nGiven synthesized layout structures, When applying color themes, Then #08090C is bound to root background, #11141C to card/surface components, and emerald-500 to primary accents.\nGiven malformed or unsupported component requests, When synthesis is triggered, Then fallback structural rules recover without crashing the pipeline.",
+          "title": "Designer Synthesis and Vision Harness Contract Specification",
+          "roleTag": "BARCAN-TAG-12",
+          "jtbd": "When defining the inter-service boundaries for this epic, I want OpenAPI contracts for layout synthesis, Playwright rendering viewports, and deontic gate evaluation DTOs, so that backend synthesis and frontend audit interfaces integrate seamlessly.",
+          "acceptanceCriteria": "Given an API client requesting layout synthesis,\nWhen submitting layout generation parameters for desktop (1440x900) or mobile (375x812),\nThen the contract specifies complete DTO schemas for layout payloads and render options.\nGiven a deontic gate evaluation response,\nWhen parsed by consuming services,\nThen the response shape strictly conforms to the defined optical noise and WCAG contrast schema.",
           "leanValue": "essential",
-          "cynefinDomain": "complicated",
-          "tocConstraintRef": "TOC-SYNTHESIS-ENGINE-PIPELINE",
-          "sixSigmaMetric": "Token conformance rate = 100% across all generated semantic elements",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "API contract compatibility and schema drift between backend and frontend",
+          "sixSigmaMetric": "API contract schema conformance rate = 100%",
           "hasUi": false,
-          "requirementRefs": ["R1"]
+          "requirementRefs": [
+            "R2"
+          ]
         },
         {
-          "title": "Implement Playwright Multi-Viewport Vision Rendering Harness",
+          "title": "Semantic Layout Synthesis Engine",
           "roleTag": "BARCAN-TAG-02",
-          "jtbd": "When orchestrating visual layout verification for this epic, I want to execute a Playwright headless rendering harness across desktop and mobile viewports, so that actual DOM geometries and pixel buffers are captured for auditing.",
-          "acceptanceCriteria": "Given a synthesized semantic layout, When the Playwright vision harness renders desktop view, Then the viewport is configured to exactly 1440x900 and DOM element bounding boxes are extracted.\nGiven a synthesized semantic layout, When the Playwright vision harness renders mobile view, Then the viewport is configured to exactly 375x812 and element responsive reflows are captured.\nGiven rendering timeouts or browser launch failures, When executing the harness, Then retries are attempted and descriptive diagnostics are emitted.",
+          "jtbd": "When implementing the core designer backend for this epic, I want a real semantic layout synthesis engine consuming Obsidian design tokens, so that hardcoded mock components are eliminated and replaced by dynamic, token-compliant layouts.",
+          "acceptanceCriteria": "Given a design brief requiring layout synthesis,\nWhen the synthesis engine generates the component hierarchy,\nThen it assigns Obsidian tokens (#08090C background, #11141C cards, emerald-500 accents) with zero mock fallback elements.\nGiven malformed or incomplete token inputs,\nWhen synthesis is triggered,\nThen the engine gracefully falls back to default token primitives while returning structured diagnostics.",
           "leanValue": "valuable",
           "cynefinDomain": "complicated",
-          "tocConstraintRef": "TOC-PLAYWRIGHT-RENDER-HARNESS",
-          "sixSigmaMetric": "Render capture latency < 1500ms per viewport with 0% unhandled browser process drops",
+          "tocConstraintRef": "Layout synthesis compute latency and AST tree generation throughput",
+          "sixSigmaMetric": "Mock component presence = 0% and synthesis failure rate < 0.1%",
           "hasUi": false,
-          "requirementRefs": ["R2"]
+          "requirementRefs": [
+            "R3"
+          ]
         },
         {
-          "title": "Implement Frontend Deontic Gate for Optical Noise and Contrast Verification",
+          "title": "Playwright Vision Harness Multi-Viewport Renderer",
+          "roleTag": "BARCAN-TAG-02",
+          "jtbd": "When implementing the visual capture subsystem for this epic, I want a headless Playwright rendering pipeline capturing 1440x900 and 375x812 viewports with exact DOM geometry, so that synthesized layouts are rendered into high-fidelity mockups with measurable geometry.",
+          "acceptanceCriteria": "Given a synthesized layout document,\nWhen rendered via the Playwright vision harness at 1440x900 desktop and 375x812 mobile viewports,\nThen it produces pixel-accurate visual renders and extracts complete DOM bounding box geometry.\nGiven a rendering timeout or browser crash,\nWhen captured by the harness supervisor,\nThen it retries execution within defined limits and reports actionable diagnostic telemetry.",
+          "leanValue": "valuable",
+          "cynefinDomain": "complicated",
+          "tocConstraintRef": "Headless browser execution time and DOM geometry extraction memory footprint",
+          "sixSigmaMetric": "Render capture success rate >= 99.8% across both viewports",
+          "hasUi": false,
+          "requirementRefs": [
+            "R4"
+          ]
+        },
+        {
+          "title": "Deontic Gate and Visual Audit Interface",
           "roleTag": "BARCAN-TAG-11",
-          "jtbd": "When validating generated mockups for this epic, I want to execute a deontic gate enforcing zero optical noise, anti-slop palette rules, and WCAG AAA contrast ratios, so that sub-standard mockups are blocked before delivery.",
-          "acceptanceCriteria": "Given rendered mockup DOM geometry and color assets, When evaluated against the deontic gate, Then any palette entry outside approved Obsidian tokens or slop thresholds triggers a rejection.\nGiven text and background color combinations, When checked by the contrast auditor, Then compliance with WCAG AAA (7:1 for normal text, 4.5:1 for large text) is strictly enforced.\nGiven visual clutter or misaligned adjacent geometries, When optical noise analysis runs, Then non-zero optical noise scores produce blocking validation failures.",
+          "jtbd": "When building the audit interface and gate for this epic, I want a deontic gate validator and inspection UI checking zero optical noise, anti-slop color palette rules, and WCAG AAA contrast, so that substandard designs are intercepted before delivery.",
+          "acceptanceCriteria": "Given a rendered design mockup and DOM geometry map,\nWhen evaluated by the deontic gate,\nThen it verifies zero optical noise, confirms strict anti-slop palette adherence, and asserts WCAG AAA contrast ratios (>= 7:1 for normal text).\nGiven a design failing contrast or containing visual noise,\nWhen inspected in the audit UI,\nThen the interface highlights offending DOM elements with exact color and contrast metrics.",
+          "leanValue": "valuable",
+          "cynefinDomain": "complicated",
+          "tocConstraintRef": "Client-side image analysis and audit rule evaluation frame rate",
+          "sixSigmaMetric": "False positive audit rejection rate < 0.5% and WCAG AAA compliance rate = 100%",
+          "hasUi": true,
+          "requirementRefs": [
+            "R5"
+          ]
+        },
+        {
+          "title": "Designer Engine Test Pyramid and Deontic Verification Suite",
+          "roleTag": "BARCAN-TAG-06",
+          "jtbd": "When implementing the quality assurance suite for this epic, I want full test pyramid coverage across unit, integration, and E2E layers, so that layout synthesis, Playwright rendering, and deontic gating operate reliably without regression.",
+          "acceptanceCriteria": "Given unit tests for semantic token resolution and layout synthesis,\nWhen executed against edge-case configurations,\nThen all assertions pass verifying 100% elimination of mock structures.\nGiven integration and E2E tests for Playwright rendering and deontic gate evaluation,\nWhen executed across 1440x900 and 375x812 viewports,\nThen the end-to-end journey completes with valid DOM geometry and verified WCAG AAA audit passes.",
           "leanValue": "essential",
           "cynefinDomain": "complicated",
-          "tocConstraintRef": "TOC-DEONTIC-GATE-ENFORCEMENT",
-          "sixSigmaMetric": "False positive gate rejection rate < 0.5% and 100% detection of sub-AAA contrast pairs",
-          "hasUi": true,
-          "requirementRefs": ["R3"]
-        },
-        {
-          "title": "Deliver Full Test Pyramid Verification for Synthesis and Deontic Auditing",
-          "roleTag": "BARCAN-TAG-06",
-          "jtbd": "When verifying sovereign designer engine capabilities for this epic, I want to execute automated unit, integration, and Playwright E2E tests across layout generation and deontic evaluation, so that the entire design pipeline operates reliably.",
-          "acceptanceCriteria": "Given unit tests for layout token mapping and contrast calculation, When executed, Then 100% of mathematical contrast assertions and token binding rules pass.\nGiven integration tests for Playwright viewport rendering, When executing parallel desktop (1440x900) and mobile (375x812) runs, Then DOM geometry matrices are accurately validated.\nGiven an end-to-end user design synthesis journey, When a client mockup is synthesized, rendered, and audited, Then the complete pipeline finishes and produces a verified pass status.",
-          "leanValue": "essential",
-          "cynefinDomain": "clear",
-          "tocConstraintRef": "TOC-AUTOMATION-TEST-SUITE",
-          "sixSigmaMetric": "Zero test flakiness and 100% pass rate across the full synthesis and audit test pyramid",
+          "tocConstraintRef": "Test suite execution wall-clock time in CI/CD pipeline",
+          "sixSigmaMetric": "Defect escape rate = 0 and automated test coverage >= 95%",
           "hasUi": false,
-          "requirementRefs": ["R1", "R2", "R3", "R4"]
+          "requirementRefs": [
+            "R6"
+          ]
         }
       ]
     }
