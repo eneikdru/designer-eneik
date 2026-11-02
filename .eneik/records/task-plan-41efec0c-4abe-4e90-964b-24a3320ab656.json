@@ -1,0 +1,64 @@
+{
+  "epics": [
+    {
+      "existingEpicId": null,
+      "title": "Mobile Touch Target Bounding Box Verification",
+      "jtbd": "When interacting with the interface on mobile viewports, I want all interactive controls to meet minimum 44x44px touch targets, so that I can navigate accurately without misclicks or interaction errors.",
+      "kanoClass": "Must-Be",
+      "cynefinDomain": "clear",
+      "sixSigmaMetric": "Interactive touch target dimension defect rate < 0.1 DPMO across mobile viewports",
+      "tocConstraintRef": "Mobile viewport interaction touch target compliance",
+      "sourceIndex": 0,
+      "requirements": [
+        "R1: Audit and verify all interactive elements across mobile viewports satisfy minimum 44x44px bounding box dimensions or equivalent touch target padding."
+      ],
+      "coverageComplete": true,
+      "slices": [
+        {
+          "title": "Verify mobile touch target 44x44px bounding boxes",
+          "roleTag": "BARCAN-TAG-06",
+          "jtbd": "When implementing mobile touch target verification for this epic, I want automated viewport assertions for interactive bounding boxes, so that no interactive controls fall below the 44x44px standard on mobile layouts.",
+          "acceptanceCriteria": "Given mobile viewport emulation at 375px and 414px widths\nWhen evaluating computed bounding client rectangles for all interactive buttons, inputs, and links\nThen each interactive target area measures at least 44x44px\nGiven interactive elements with compact visual icons or typography\nWhen rendered in mobile layout\nThen touch target padding or touch expansion pseudo-elements maintain at least 44x44px dimensions without overlapping adjacent controls",
+          "leanValue": "essential",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "Mobile interaction bounding box regression suite",
+          "sixSigmaMetric": "100% pass rate for mobile touch target bounding box assertions",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1"
+          ]
+        }
+      ]
+    },
+    {
+      "existingEpicId": null,
+      "title": "WCAG AA Contrast Compliance Monitoring for Metadata and Muted Badges",
+      "jtbd": "When reading subtle metadata and muted badges across alternative theme variants, I want contrast ratios to consistently meet or exceed WCAG AA 4.5:1, so that low-vision users can easily read all contextual elements.",
+      "kanoClass": "Must-Be",
+      "cynefinDomain": "clear",
+      "sixSigmaMetric": "0 WCAG AA contrast violations across supported theme variants",
+      "tocConstraintRef": "Theme token color contrast compliance pipeline",
+      "sourceIndex": 1,
+      "requirements": [
+        "R1: Monitor and assert WCAG AA 4.5:1 contrast compliance for subtle metadata and muted badge text elements across all alternative theme variants."
+      ],
+      "coverageComplete": true,
+      "slices": [
+        {
+          "title": "Automate contrast ratio verification for metadata and badges across themes",
+          "roleTag": "BARCAN-TAG-06",
+          "jtbd": "When implementing contrast compliance monitoring for this epic, I want automated color contrast analysis across all alternative theme variants, so that subtle metadata and muted badges adhere strictly to the 4.5:1 WCAG AA threshold.",
+          "acceptanceCriteria": "Given active alternative theme variants including light, dark, and high-contrast modes\nWhen executing automated accessibility contrast audit assertions on muted badge and metadata selectors\nThen all computed foreground-to-background contrast ratios evaluate to 4.5:1 or higher\nGiven dynamic theme switching at runtime\nWhen theme tokens update\nThen zero WCAG AA color contrast violations are reported for badge or metadata elements",
+          "leanValue": "essential",
+          "cynefinDomain": "clear",
+          "tocConstraintRef": "Theme token accessibility audit runner",
+          "sixSigmaMetric": "100% compliance with WCAG AA 4.5:1 contrast requirements across all theme variants",
+          "hasUi": false,
+          "requirementRefs": [
+            "R1"
+          ]
+        }
+      ]
+    }
+  ]
+}
