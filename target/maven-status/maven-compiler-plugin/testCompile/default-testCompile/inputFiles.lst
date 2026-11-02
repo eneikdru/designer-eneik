@@ -1,0 +1,11 @@
+/workspace/src/test/java/com/eneik/generated/controller/DesignTokenControllerTest.java
+/workspace/src/test/java/com/eneik/generated/controller/HealthControllerTest.java
+/workspace/src/test/java/com/eneik/generated/controller/LayoutPatternControllerTest.java
+/workspace/src/test/java/com/eneik/generated/designer/domain/SynthesisSessionTest.java
+/workspace/src/test/java/com/eneik/generated/designer/service/DefaultPlaywrightVisionHarnessTest.java
+/workspace/src/test/java/com/eneik/generated/designer/service/DefaultSemanticLayoutSynthesizerTest.java
+/workspace/src/test/java/com/eneik/generated/designer/service/DefaultSovereignDesignSynthesisServiceTest.java
+/workspace/src/test/java/com/eneik/generated/designer/service/DefaultVisionAuditLoopTest.java
+/workspace/src/test/java/com/eneik/generated/designer/telemetry/DesignTelemetryCollectorTest.java
+/workspace/src/test/java/com/eneik/generated/service/DesignTokenCompilerTest.java
+/workspace/src/test/java/com/eneik/generated/service/LayoutPatternRegistryTest.java
