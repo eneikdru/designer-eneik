@@ -1,0 +1,6 @@
+# Automated test artifacts (BARCAN-TAG-06)
+playwright-report/
+test-results/
+coverage/
+*.trace.zip
+*.png
