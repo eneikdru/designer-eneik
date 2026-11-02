@@ -1,0 +1,20 @@
+[
+  {
+    "concern": "Verify touch target dimensions for interactive secondary controls adhere to the 44x44px minimum touch target size on 375px viewports.",
+    "jtbd": "When interacting with secondary controls on a 375px mobile viewport, I want interactive touch targets to span at least 44x44px, so that I can reliably tap them without accidental touches or coordination strain.",
+    "acceptanceCriteria": "Given a viewport width of 375px, When inspecting all interactive secondary controls, Then each element's touch target area (including hit area / padding) is at least 44x44 CSS pixels and spaced sufficiently from adjacent controls.",
+    "editInstruction": "Update CSS rules for secondary interactive controls on mobile viewports (max-width: 375px) to enforce a minimum touch target dimension of 44x44px via min-height: 44px, min-width: 44px, or expanded transparent hitboxes.",
+    "kanoClass": "must_be",
+    "cynefinDomain": "clear",
+    "leanValue": "essential"
+  },
+  {
+    "concern": "Ensure subtle muted text tokens retain >= 4.5:1 contrast against light container backgrounds across all monitor profiles.",
+    "jtbd": "When reading subtle or secondary text on light container backgrounds, I want text color contrast to be at least 4.5:1, so that the information is effortlessly legible regardless of monitor calibration or lighting conditions.",
+    "acceptanceCriteria": "Given text elements styled with muted color tokens rendered against light container backgrounds, When measured using WCAG 2.1 luminance algorithms, Then the contrast ratio is at least 4.5:1 for standard body text.",
+    "editInstruction": "Darken the muted text color token used over light container backgrounds so that the computed WCAG color contrast ratio is greater than or equal to 4.5:1 while maintaining designated token hierarchy.",
+    "kanoClass": "must_be",
+    "cynefinDomain": "clear",
+    "leanValue": "essential"
+  }
+]
