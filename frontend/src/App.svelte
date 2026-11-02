@@ -46,8 +46,8 @@
             </div>
             <nav class="flex space-x-4 text-xs font-mono text-slate-200">
               <span class="text-white font-semibold">Canvas</span>
-              <span>Tokens</span>
-              <span>Layout</span>
+              <span class="text-slate-300">Tokens</span>
+              <span class="text-slate-300">Layout</span>
             </nav>
           </div>
 
@@ -58,11 +58,11 @@
 
         <div class="grid grid-cols-2 gap-4 mt-6">
           <div class="p-4 rounded bg-[#08090c] border border-slate-800">
-            <span class="text-xs font-mono text-slate-400 block mb-1">Ratio Spec</span>
+            <span class="text-xs font-mono text-slate-300 block mb-1 font-semibold">Ratio Spec</span>
             <p class="text-sm font-semibold text-white">WCAG AAA &gt;= 7.0:1</p>
           </div>
           <div class="p-4 rounded bg-[#08090c] border border-slate-800">
-            <span class="text-xs font-mono text-slate-400 block mb-1">Optical Jitter</span>
+            <span class="text-xs font-mono text-slate-300 block mb-1 font-semibold">Optical Jitter</span>
             <p class="text-sm font-semibold text-emerald-400">0.000 (Zero Noise)</p>
           </div>
         </div>

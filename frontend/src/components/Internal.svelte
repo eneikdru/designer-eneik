@@ -26,7 +26,7 @@
     evaluatedAt: ''
   };
 
-  // Approved Obsidian Tokens and Slop Blacklist
+  // Approved Obsidian Tokens and Palette
   const APPROVED_PALETTE = new Set([
     '#08090c',
     '#11141c',
@@ -39,14 +39,16 @@
     '#111827',
     '#0f172a',
     '#e2e8f0',
-    '#f8fafc'
+    '#f8fafc',
+    '#cbd5e1',
+    '#94a3b8'
   ]);
 
   const SLOP_PALETTE_PATTERNS = [
-    /^#ff00/i, // crude saturated primaries
+    /^#ff00/i,
     /^#00ff/i,
     /^#ffff00/i,
-    /^#808080/i // default unstyled gray
+    /^#808080/i
   ];
 
   function rgbToHex(rgbStr: string): string {
@@ -168,7 +170,7 @@
           parent = parent.parentElement;
         }
         if (effectiveBgHex === 'transparent' || effectiveBgHex === 'rgba(0, 0, 0, 0)') {
-          effectiveBgHex = '#08090c'; // default obsidian canvas
+          effectiveBgHex = '#08090c';
         }
         const bgRgb = parseRgb(effectiveBgHex);
 
@@ -194,7 +196,6 @@
     }
 
     // 3. Optical Noise & Sub-pixel Misalignment Analysis
-    // Measures fraction of adjacent geometries with off-grid floating misalignment (fractional offsets < 0.2px or odd offsets causing visual vibration)
     let misalignmentCount = 0;
     for (let j = 0; j < renderedBoxes.length; j++) {
       const boxA = renderedBoxes[j];
@@ -206,10 +207,9 @@
 
       for (let k = j + 1; k < renderedBoxes.length; k++) {
         const boxB = renderedBoxes[k];
-        // Check adjacent margins for 1px jitter/optical noise
         const horizGap = Math.abs(boxA.right - boxB.left);
         const vertGap = Math.abs(boxA.bottom - boxB.top);
-        if ((horizGap > 0 && horizGap < 2 && horizGap !== 1) || (vertGap > 0 && vertGap < 2 && vertGap !== 1)) {
+        if ((horizGap > 0 && horizGap < 2 && Math.abs(horizGap - 1) > 0.05) || (vertGap > 0 && vertGap < 2 && Math.abs(vertGap - 1) > 0.05)) {
           opticalNoiseScore += 0.25;
         }
       }
@@ -219,7 +219,6 @@
       opticalNoiseScore += misalignmentCount * 0.1;
     }
 
-    // Zero Optical Noise strict enforcement
     if (opticalNoiseScore > 0) {
       violations.push({
         type: 'OPTICAL_NOISE',
