@@ -1,0 +1,28 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-07",
+      "type": "refusal_criteria",
+      "prNumber": 66,
+      "reason": "In .eneik/records/task-plan-25cdcec0-734d-4ffe-a29a-f97907f0a108.json, the slice acceptanceCriteria lacks required 'auth' or 'validation' keywords, violating BARCAN-TAG-07 Refusal Criterion 3 (Неопределенность границ доступа и правил фильтрации)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 67,
+      "reason": "In frontend/src/App.svelte, the UI hardcodes metrics 'WCAG AAA >= 7.0:1' and '0.000 (Zero Noise)' inside static markup rather than binding or calculating actual contrast ratios and optical jitter measurements from the evaluation harness in Internal.svelte."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 67,
+      "reason": "In frontend/src/App.svelte and frontend/src/components/Internal.svelte, the presentation layer is unwired from the underlying audit engine; the displayed ratio spec and optical jitter cards do not connect to or receive data from Internal.svelte or any backend synthesis/audit service."
+    },
+    {
+      "roleTag": "BARCAN-TAG-09",
+      "type": "stub",
+      "prNumber": 66,
+      "reason": "In .eneik/records/task-plan-25cdcec0-734d-4ffe-a29a-f97907f0a108.json, the task plan asserts 'coverageComplete': true while faking client specification coverage: it entirely omits the 6 core components mandated by the client brief (DesignTokenCompiler, LayoutPatternRegistry, SemanticLayoutSynthesizer, PlaywrightVisionHarness, VisionAuditLoop, and SovereignDesignSynthesisService/DesignAssetService.java), reducing the entire Autonomous Sovereign Designer Engine to a single static template markup update."
+    }
+  ]
+}
