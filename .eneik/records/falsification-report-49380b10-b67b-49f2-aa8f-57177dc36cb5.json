@@ -1,0 +1,15 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts: RuntimeThemeManager and themeVariants are hardcoded in-test fixtures faking dynamic runtime theme management and token evaluation. No real production tokens, layout components, or DesignTokenCompiler classes are imported or verified, producing a false green test."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "reason": "tests/accessibility/theme-contrast.test.ts in PR #72 asserts compliance against WCAG AA (>= 4.5:1) and defines dark metadata text (#94A3B8 vs #0F172A at ~5.78:1), violating the client brief requirement and BARCAN-TAG-11 deontic gate mandating WCAG AAA compliance (minimum 7:1 contrast against background) and Obsidian design tokens (#08090C, #11141C)."
+    }
+  ]
+}
