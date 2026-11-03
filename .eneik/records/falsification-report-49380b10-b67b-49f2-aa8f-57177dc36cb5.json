@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, RuntimeThemeManager and themeVariants fake runtime theme switching and token contrast verification using an in-test mock fixture class and hardcoded slate palette tested against WCAG AA (4.5:1), rather than testing the real DesignTokenCompiler and verifying the client-mandated WCAG AAA (7:1) contrast with Obsidian tokens (#08090C, #11141C)."
+    }
+  ]
+}
