@@ -1,0 +1,21 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "reason": "PR #72 violates the BARCAN-TAG-11 deontic gate and client specification requiring WCAG AAA contrast (minimum 7:1) by configuring tests to assert only WCAG AA (>= 4.5:1) compliance and defining tokens (#475569 with ~5.89:1 and #94A3B8 with ~5.78:1) that fail the mandatory 7:1 AAA ratio."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines a local dummy class RuntimeThemeManager and hardcoded themeVariants fixture within the test file itself, faking runtime theme switching and contrast verification without importing or testing the actual DesignTokenCompiler or production theme tokens."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts tests an isolated mock class and synthetic fixtures completely unwired from the production design token pipeline (DesignTokenCompiler / Obsidian tokens)."
+    }
+  ]
+}
