@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts creates in-memory mock class RuntimeThemeManager and fixture themeVariants rather than testing real DesignTokenCompiler and Obsidian tokens (#08090C, #11141C). It lowers contrast thresholds to WCAG AA (4.5:1) instead of verifying WCAG AAA (7:1) as required by the client specification, faking compliance while slate-400 on slate-900 (~5.78:1) fails WCAG AAA."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts claims dynamic runtime theme switching verification across layers, but RuntimeThemeManager is completely unwired from the application DOM, theme provider, and design token engine."
+    }
+  ]
+}
