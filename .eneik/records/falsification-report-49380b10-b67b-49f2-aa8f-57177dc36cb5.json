@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an in-file mock RuntimeThemeManager and hardcoded themeVariants fixture rather than importing or verifying real project tokens or DesignTokenCompiler. It simulates success on arbitrary slate colors against WCAG AA (4.5:1) while completely bypassing the required Obsidian design tokens (#08090C, #11141C) and WCAG AAA (>= 7:1) standard mandated by the client specification."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts introduces a synthetic RuntimeThemeManager layer that is completely unwired from the actual frontend styling, DesignTokenCompiler, and SovereignDesignSynthesisService layers, testing an isolated in-memory fixture with no real implementation behind it."
+    }
+  ]
+}
