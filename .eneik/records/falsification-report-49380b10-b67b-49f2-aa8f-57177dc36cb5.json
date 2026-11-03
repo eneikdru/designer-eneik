@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts verifies only WCAG AA (>= 4.5:1) contrast with themeVariants values yielding 5.78:1 and 5.89:1, violating the client specification and BARCAN-TAG-11 deontic gate requiring WCAG AAA compliance (minimum 7:1 contrast ratio to background) and Obsidian palette tokens (#08090C, #11141C)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "RuntimeThemeManager in tests/accessibility/theme-contrast.test.ts is an in-test stub faking dynamic runtime theme switching with local fixture data instead of exercising real production theme management or DesignTokenCompiler."
+    }
+  ]
+}
