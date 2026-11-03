@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 implements contrast ratio verification calibrated only to WCAG AA minimum threshold (4.5:1, WCAG_AA_MIN_RATIO = 4.5), directly violating the client specification requiring APCA/WCAG AAA contrast (minimum 7:1 to background). Testing against a lower standard provides false compliance assurance against client requirements."
+    },
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts tests an internal in-memory mock RuntimeThemeManager and hardcoded fixture tokens (themeVariants) rather than auditing real generated CSS/DOM tokens from DesignTokenCompiler or actual semantic layout outputs."
+    }
+  ]
+}
