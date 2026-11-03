@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an in-file mock RuntimeThemeManager and local themeVariants fixture with slate tokens (#0F172A, #1E293B) instead of importing and testing actual production design tokens from DesignTokenCompiler. Additionally, it asserts WCAG AA (4.5:1) threshold rather than the client-mandated WCAG AAA (>= 7:1) contrast against Obsidian palette tokens (#08090C, #11141C)."
+    }
+  ]
+}
