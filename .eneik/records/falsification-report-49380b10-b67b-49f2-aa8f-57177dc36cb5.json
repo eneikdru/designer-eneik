@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an in-file fixture class RuntimeThemeManager and hardcoded themeVariants (slate palette) that fake theme contrast verification without testing real design tokens or DesignTokenCompiler. Furthermore, it asserts success against WCAG AA (>= 4.5:1) instead of the client-mandated WCAG AAA (>= 7:1) threshold, faking accessibility compliance while passing non-compliant tokens (#475569 at 5.89:1, #94A3B8 at 5.78:1)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts is unwired from the actual layout and design token engine. It executes against an isolated in-memory RuntimeThemeManager class defined directly inside the test file rather than validating tokens produced by DesignTokenCompiler or applied in the actual DOM."
+    }
+  ]
+}
