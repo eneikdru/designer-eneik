@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 implements tests/accessibility/theme-contrast.test.ts testing against WCAG AA 4.5:1 threshold (WCAG_AA_MIN_RATIO = 4.5) with slate tokens (#475569 vs #FFFFFF = ~5.89:1, #94A3B8 vs #0F172A = ~5.78:1) failing the explicit client specification and BARCAN-TAG-11 requirement for WCAG AAA compliance (minimum 7:1 contrast ratio to background) and Obsidian design tokens (#08090C, #11141C)."
+    }
+  ]
+}
