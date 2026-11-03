@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an in-file mock class RuntimeThemeManager and hardcoded themeVariants fixtures rather than importing and verifying the real production design token system or DesignTokenCompiler; it fakes theme contrast testing against local dummy data using WCAG AA (4.5:1) instead of verifying real Obsidian tokens (#08090C, #11141C) against the client brief's required WCAG AAA (7:1) standard."
+    }
+  ]
+}
