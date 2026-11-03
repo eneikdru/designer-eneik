@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts declares an internal stub class RuntimeThemeManager and hardcoded themeVariants fixture within the test file itself rather than testing production code (DesignTokenCompiler / SovereignDesignSynthesisService), faking test success without exercising real application logic."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts enforces only WCAG AA (>= 4.5:1) with slate tokens yielding 5.89:1 and 5.78:1 contrast ratios, violating the client specification and BARCAN-TAG-11 deontic gate requiring strict WCAG AAA contrast (minimum 7:1 against background) and Obsidian design tokens."
+    }
+  ]
+}
