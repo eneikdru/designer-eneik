@@ -1,0 +1,22 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts declares an internal mock class RuntimeThemeManager and hardcoded themeVariants fixtures rather than importing and verifying the actual DesignTokenCompiler or production design tokens, faking contrast verification success without testing real system components."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 defines and verifies contrast against WCAG AA 4.5:1 minimum ratio using slate theme tokens (#475569 with 5.89:1, #94A3B8 with 5.78:1), directly violating the client specification and BARCAN-TAG-11 deontic gate mandating WCAG AAA contrast (minimum 7:1) and the multi-level Obsidian token palette (#08090C -> #11141C)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 69,
+      "reason": "tests/mobile-touch-targets.spec.ts navigates to '/' rather than integrating with the synthesized mockup (mockup.html) or PlaywrightVisionHarness required by the client specification, leaving the UI verification layer unwired from the autonomous designer generation pipeline."
+    }
+  ]
+}
