@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts declares an in-test mock class RuntimeThemeManager and local themeVariants fixture rather than importing or testing real production tokens or DesignTokenCompiler, faking theme contrast verification without exercising actual product logic, and testing only WCAG AA (4.5:1) instead of the required WCAG AAA (7:1) contrast ratio."
+    }
+  ]
+}
