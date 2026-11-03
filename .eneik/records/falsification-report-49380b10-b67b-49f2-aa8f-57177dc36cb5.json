@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, RuntimeThemeManager and themeVariants are isolated, hardcoded local test fixtures with slate/yellow tokens rather than the real Obsidian (#08090C, #11141C) DesignTokenCompiler tokens or production design system required by the client specification, faking compliance verification without testing real production code."
+    },
+    {
+      "roleTag": "BARCAN-TAG-02",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts does not test or import SovereignDesignSynthesisService or DesignTokenCompiler; it tests a detached in-memory mock class RuntimeThemeManager completely unwired from the actual engine and design asset pipeline."
+    }
+  ]
+}
