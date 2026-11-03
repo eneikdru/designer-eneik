@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 67,
+      "reason": "In frontend/src/App.svelte, the UI cards display hardcoded static values '<p class=\"text-sm font-semibold text-white\">WCAG AAA &gt;= 7.0:1</p>' and '<p class=\"text-sm font-semibold text-emerald-400\">0.000 (Zero Noise)</p>' rather than dynamically computing and displaying verification results from Internal.svelte or backend engine, faking compliance with contrast and optical noise standards without performing real work."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 67,
+      "reason": "In frontend/src/App.svelte and frontend/src/components/Internal.svelte, the UI slice in App.svelte presents Ratio Spec and Optical Jitter cards but is completely unwired from the evaluation logic (evaluateDesign) implemented in Internal.svelte, creating a presentation layer with no underlying data flow or integration."
+    }
+  ]
+}
