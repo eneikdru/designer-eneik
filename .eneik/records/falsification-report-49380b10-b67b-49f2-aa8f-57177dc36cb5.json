@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts implements a self-contained in-file mock class RuntimeThemeManager and local themeVariants fixture (slate/white/yellow) that tests only itself. It fakes theme contrast verification without importing or exercising the actual DesignTokenCompiler or sovereign Obsidian design tokens (#08090C, #11141C), while also asserting WCAG AA (4.5:1) instead of the client-specified WCAG AAA (7:1)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts is unwired from the production design architecture. The test suite does not integrate with or invoke SovereignDesignSynthesisService, DesignTokenCompiler, or actual project token files, creating an isolated test slice disconnected from the underlying design engine pipeline."
+    }
+  ]
+}
