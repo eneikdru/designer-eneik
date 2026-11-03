@@ -1,0 +1,21 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "reason": "PR #72 tests for WCAG AA (>= 4.5:1) compliance using slate tokens with contrast ratios of ~5.89:1 (#475569) and ~5.78:1 (#94A3B8), violating the explicit client specification requiring WCAG AAA contrast (minimum 7:1 against background) and Obsidian palette tokens (#08090C, #11141C)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "RuntimeThemeManager and themeVariants in tests/accessibility/theme-contrast.test.ts are mock fixtures defined entirely inside the test file that fake dynamic theme switching and token resolution without exercising the actual DesignTokenCompiler or production design tokens."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts is completely unwired from the application layer: it imports only vitest and tests against an isolated in-memory dummy class, leaving the real token system and SovereignDesignSynthesisService untested."
+    }
+  ]
+}
