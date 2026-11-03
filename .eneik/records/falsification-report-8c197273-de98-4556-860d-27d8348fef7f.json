@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-07",
+      "type": "refusal_criteria",
+      "prNumber": 66,
+      "reason": "PR #66 task plan slice 'Implement approved mockup UI into existing templates' has acceptance criteria lacking explicit 'auth' or 'validation' keywords, violating BARCAN-TAG-07 mandatory refusal criteria on access boundaries and error handling."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 67,
+      "reason": "In frontend/src/App.svelte, navigation items 'Tokens' and 'Layout' are rendered as passive styled span elements (<span class=\"text-slate-300\">Tokens</span>) inside <nav> without active routing, click handling, or backing views, constituting a UI slice with nothing real behind it."
+    }
+  ]
+}
