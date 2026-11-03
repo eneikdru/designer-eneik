@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, RuntimeThemeManager and themeVariants are defined locally as test fixtures inside the test file itself. The test evaluates only these mock objects and does not import or execute any actual application code or DesignTokenCompiler, faking theme contrast verification without verifying production artifacts."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts configures WCAG_AA_MIN_RATIO = 4.5 and tests only WCAG AA compliance (4.5:1) on generic slate palettes, violating the client specification and BARCAN-TAG-11 deontic gate requiring strict WCAG AAA contrast (minimum 7:1 ratio to background) on Obsidian design tokens (#08090C, #11141C)."
+    }
+  ]
+}
