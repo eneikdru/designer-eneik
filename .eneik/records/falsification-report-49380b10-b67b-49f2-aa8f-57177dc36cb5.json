@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an internal fixture object themeVariants and mock class RuntimeThemeManager entirely within the test file, asserting against this local stub rather than importing and testing the production DesignTokenCompiler or actual Obsidian design tokens (#08090C, #11141C). It also tests against WCAG AA (4.5:1) instead of the client-specified WCAG AAA (7:1) requirement."
+    }
+  ]
+}
