@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an isolated in-memory fixture class RuntimeThemeManager and static themeVariants tokens instead of integrating with or testing real DesignTokenCompiler logic. It fakes theme switching and validates only WCAG AA (4.5:1) on slate palettes, failing to verify the mandated WCAG AAA (7:1 minimum) contrast floor and Obsidian tokens (#08090C, #11141C) required by the client specification."
+    }
+  ]
+}
