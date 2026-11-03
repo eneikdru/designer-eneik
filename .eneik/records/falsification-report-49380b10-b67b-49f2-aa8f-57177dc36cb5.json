@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts: RuntimeThemeManager and themeVariants define an in-test mock fixture class and hardcoded slate palette (#0F172A, #1E293B, #FFFFFF) faking theme switching and contrast verification without importing or verifying real application tokens (Obsidian #08090C, #11141C) or DesignTokenCompiler, and checks WCAG AA (4.5:1) instead of the required WCAG AAA (7:1) contrast."
+    }
+  ]
+}
