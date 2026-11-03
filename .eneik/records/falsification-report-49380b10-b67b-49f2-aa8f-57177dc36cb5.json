@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 tests/accessibility/theme-contrast.test.ts verifies only WCAG AA (>= 4.5:1) with standard slate palettes, directly violating the client brief mandate for WCAG AAA contrast (minimum 7:1 ratio to background) and BARCAN-TAG-11 anti-slop obsidian design tokens (#08090C -> #11141C)."
+    }
+  ]
+}
