@@ -1,0 +1,32 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 implements contrast tests configured for WCAG AA (>= 4.5:1) with subtle text tokens achieving only 5.78:1 and 5.89:1, directly violating the client specification requiring WCAG AAA contrast (minimum 7:1 against background) and Obsidian palette tokens (#08090C, #11141C)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines a synthetic in-memory class RuntimeThemeManager and hardcoded themeVariants dictionary inside the test file itself rather than testing the real DesignTokenCompiler or actual production design tokens, faking theme switching verification without real system integration."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 69,
+      "reason": "tests/mobile-touch-targets.spec.ts targets only mobile viewports (375x667 and 414x896), omitting the mandatory 1440x900 desktop viewport and 375x812 mobile viewport specified in the PlaywrightVisionHarness brief requirements, leaving desktop visual harness coverage completely unwired."
+    },
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "methodological",
+      "philosopher": "Карл Поппер",
+      "thesis": "Принцип фальсифицируемости (критический рационализм) и Falsification Harness: тесты качества обязаны строго проверять спецификацию и служить потенциальным опровержением гипотезы соответствия, не допуская ложно-зеленых статусов (D008 False green).",
+      "score": "2",
+      "mustBe": "Тесты доступности обязаны валидировать соответствие контрастности стандарту WCAG AAA (>= 7.0:1) на токенах Obsidian (#08090C, #11141C) реальной кодовой базы.",
+      "performance": "PR #72 занизил порог отсечения до WCAG AA (4.5:1) для прохождения синтетических токенов slate-900/slate-800 (5.78:1), маскируя неполноту реализации клиентской спецификации.",
+      "attractive": "Полноценная проверка DesignTokenCompiler с порогом WCAG AAA (>= 7:1) и APCA-валидацией на реальных токенах."
+    }
+  ]
+}
