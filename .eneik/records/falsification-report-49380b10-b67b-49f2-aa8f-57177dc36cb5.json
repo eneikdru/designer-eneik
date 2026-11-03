@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts fakes theme contrast verification by constructing an isolated in-file fixture themeVariants and mock RuntimeThemeManager instead of testing real application design tokens or DesignTokenCompiler, and tests WCAG AA (>= 4.5:1) with slate colors (5.89:1, 5.78:1) rather than the client specification mandated WCAG AAA (minimum 7:1) contrast against Obsidian background tokens"
+    },
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts fakes test coverage by verifying only local in-file mock structures (RuntimeThemeManager and themeVariants) completely disconnected from actual production code, producing a false green test suite"
+    }
+  ]
+}
