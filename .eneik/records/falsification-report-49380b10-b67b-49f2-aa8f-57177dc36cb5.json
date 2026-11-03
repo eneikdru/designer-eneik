@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 tests/accessibility/theme-contrast.test.ts implements verification strictly for WCAG AA (>= 4.5:1) using generic slate palettes (#0F172A, #1E293B) instead of the client brief mandate for WCAG AAA contrast (minimum 7:1 to background) and multi-level Obsidian design tokens (#08090C -> #11141C). This violates the BARCAN-TAG-11 deontic gate requiring WCAG AAA contrast compliance and Obsidian token tracing."
+    }
+  ]
+}
