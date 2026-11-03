@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, RuntimeThemeManager (lines 125-139) is a stub class defined directly within the test file, evaluated against hardcoded local themeVariants (lines 80-123) with WCAG AA 4.5:1 instead of importing and testing the actual product DesignTokenCompiler or SovereignDesignSynthesisService with WCAG AAA (7:1) and Obsidian palette tokens (#08090C, #11141C). The test fakes theme contrast verification without executing any product code."
+    }
+  ]
+}
