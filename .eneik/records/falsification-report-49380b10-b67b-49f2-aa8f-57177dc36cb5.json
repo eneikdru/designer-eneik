@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts: RuntimeThemeManager and themeVariants are self-contained test fixtures that fake theme switching and contrast verification without importing or exercising production DesignTokenCompiler or Obsidian tokens (#08090C, #11141C), while validating only WCAG AA (4.5:1) instead of the client-specified WCAG AAA (7:1) requirement."
+    }
+  ]
+}
