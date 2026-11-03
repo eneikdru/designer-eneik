@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts declares a local dummy class RuntimeThemeManager and hardcoded fixture object themeVariants entirely within the test file, asserting WCAG AA (4.5:1) compliance on isolated fixtures rather than importing and verifying the actual DesignTokenCompiler or production theme tokens. Real token compilation and WCAG AAA (>= 7:1) validation against Obsidian theme tokens (#08090C, #11141C) are completely missing."
+    }
+  ]
+}
