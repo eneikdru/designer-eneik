@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 implements theme contrast verification in tests/accessibility/theme-contrast.test.ts asserting only WCAG AA standard (>= 4.5:1 ratio via WCAG_AA_MIN_RATIO = 4.5 and metadata text Slate-600 #475569 at ~5.89:1), directly violating the client brief specification requiring WCAG AAA compliance (minimum 7:1 contrast ratio against background) and Obsidian token palette verification (#08090C, #11141C)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, calculateContrastRatio and RuntimeThemeManager test synthetic local constants (themeVariants with slate-900 #0F172A) rather than testing the real Obsidian design token compilation (#08090C, #11141C, emerald-500) or actual DOM elements synthesized by SemanticLayoutSynthesizer, producing a false green test that passes without testing product code."
+    }
+  ]
+}
