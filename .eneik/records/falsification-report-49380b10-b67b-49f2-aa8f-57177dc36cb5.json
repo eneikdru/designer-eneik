@@ -1,0 +1,10 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts implements a self-contained mock RuntimeThemeManager with local static fixtures (themeVariants) instead of importing or testing production DesignTokenCompiler or real Obsidian design tokens (#08090C, #11141C). It fakes accessibility contrast verification against local fixtures while testing only WCAG AA (4.5:1) rather than enforcing the client-mandated WCAG AAA (>= 7:1) APCA contrast standard."
+    }
+  ]
+}
