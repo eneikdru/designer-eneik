@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 69,
+      "reason": "Client specification explicitly requires hardware viewport validation at 1440x900 desktop and 375x812 mobile. PR #69 mobile-touch-targets.spec.ts tested mobile at 375x667 and 414x896, deviating from the 375x812 mobile standard specified in the client brief."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 67,
+      "reason": "frontend/src/components/Internal.svelte fakes zero optical noise audit by hardcoding an arbitrary tolerance threshold 'Math.abs(horizGap - 1) > 0.05' against bounding boxes rather than executing real DOM geometry audit or Playwright visual screenshot differential against the specified obsidian layout rules."
+    }
+  ]
+}
