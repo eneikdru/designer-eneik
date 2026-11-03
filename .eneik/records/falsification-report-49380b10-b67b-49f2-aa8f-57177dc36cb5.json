@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, RuntimeThemeManager and themeVariants are hardcoded local test fixtures that fake theme switching and contrast verification without importing or executing the actual DesignTokenCompiler or production token pipeline. Furthermore, the test suite verifies only WCAG AA (>= 4.5:1) with metadata tokens (#475569 at ~5.89:1 and #94A3B8 at ~5.78:1), failing the client specification requiring strict WCAG AAA (minimum 7:1) contrast."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "In tests/accessibility/theme-contrast.test.ts, an architectural layer violation exists where the test verification slice is completely unwired from the production design system: RuntimeThemeManager is an isolated in-test mock rather than integrating with the actual DesignTokenCompiler or SovereignDesignSynthesisService."
+    }
+  ]
+}
