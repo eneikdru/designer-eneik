@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an in-file mock class RuntimeThemeManager and hardcoded themeVariants fixture, verifying artificial local constants rather than testing real DesignTokenCompiler tokens or production theme assets."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts is completely unwired from the actual design engine (DesignTokenCompiler / SovereignDesignSynthesisService); it tests a self-contained in-memory fixture and enforces only WCAG AA (4.5:1) instead of the required WCAG AAA (>= 7:1) contrast against Obsidian tokens (#08090C, #11141C)."
+    }
+  ]
+}
