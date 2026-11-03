@@ -1,0 +1,22 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "refusal_criteria",
+      "prNumber": 72,
+      "reason": "PR #72 tests/accessibility/theme-contrast.test.ts specifies and tests against WCAG AA 4.5:1 minimum contrast ratio with generic Slate colors (#0F172A, #1E293B) instead of adhering to the mandatory client specification and BARCAN-TAG-11 requirement of WCAG AAA contrast (minimum 7:1) and Obsidian design tokens (#08090C, #11141C, emerald-500)."
+    },
+    {
+      "roleTag": "BARCAN-TAG-02",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts implements an isolated in-memory fixture RuntimeThemeManager and hardcoded themeVariants disconnected from the actual DesignTokenCompiler and SovereignDesignSynthesisService required by docs/design/TZ_AUTONOMOUS_DESIGNER_ENGINE.md."
+    },
+    {
+      "roleTag": "BARCAN-TAG-06",
+      "type": "stub",
+      "prNumber": 69,
+      "reason": "tests/mobile-touch-targets.spec.ts tests touch targets against root URL '/' without wiring to the actual mockup synthesis engine (SemanticLayoutSynthesizer) or validating against the two mandatory rendering viewports (1440px desktop and 375x812 mobile) specified in PlaywrightVisionHarness."
+    }
+  ]
+}
