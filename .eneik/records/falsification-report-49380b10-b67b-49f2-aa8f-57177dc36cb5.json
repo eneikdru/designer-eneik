@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts defines an in-test mock class RuntimeThemeManager and synthetic themeVariants fixture instead of testing actual DesignTokenCompiler tokens or the Obsidian palette (#08090C, #11141C), asserting WCAG AA (4.5:1) rather than the client-mandated WCAG AAA (>= 7:1) contrast threshold."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "layer_violation",
+      "prNumber": 72,
+      "reason": "tests/accessibility/theme-contrast.test.ts claims dynamic runtime theme switching evaluation but exercises a private class internal to the test file with zero integration to the production design token pipeline, UI components, or DOM runtime."
+    }
+  ]
+}
