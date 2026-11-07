@@ -1,0 +1,14 @@
+{
+  "violations": [
+    {
+      "roleTag": "BARCAN-TAG-01",
+      "type": "refusal_criteria",
+      "reason": "design/draft/20261102204512-mockup/mockup.html uses background tokens #0B0F19 and #111827 instead of the client specification declared Obsidian tokens #08090C and #11141C, violating KIT_FAYN_17_TOKEN_TRACE_UNITY / PITER_SAYMONS_08 token trace requirements."
+    },
+    {
+      "roleTag": "BARCAN-TAG-11",
+      "type": "stub",
+      "reason": "design/draft/20261102204512-mockup/mockup.html contains audit-refinement-round-1, round-2, and round-3 tags applying identical duplicate 'body, main, section { overflow-x: hidden; max-width: 100vw; }' rules to fake responsive fix for 375px horizontal overflow without refactoring layout geometry or element widths."
+    }
+  ]
+}
